@@ -1,0 +1,43 @@
+{
+  "collections": {
+    "users": {
+      "documentId": "uid",
+      "fields": {
+        "email": "string",
+        "created_at": "timestamp",
+        "preferences": {
+          "daily_notification": "boolean",
+          "notification_time": "string (HH:MM)",
+          "categories": ["string"]
+        },
+        "favorite_quotes": ["string (quote_id)"]
+      }
+    },
+    "quotes": {
+      "documentId": "auto-generated",
+      "fields": {
+        "text": "string",
+        "author": "string",
+        "category": "string",
+        "popularity_score": "number",
+        "created_at": "timestamp"
+      }
+    },
+    "daily_quotes": {
+      "documentId": "string (YYYY-MM-DD)",
+      "fields": {
+        "quote_id": "string",
+        "category_override": "string (optional)"
+      }
+    },
+    "user_activity": {
+      "documentId": "auto-generated",
+      "fields": {
+        "user_id": "string",
+        "action_type": "string (view, favorite, share)",
+        "quote_id": "string",
+        "timestamp": "timestamp"
+      }
+    }
+  }
+}
