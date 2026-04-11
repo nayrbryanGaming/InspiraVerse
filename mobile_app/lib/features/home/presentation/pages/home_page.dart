@@ -23,6 +23,13 @@ class _HomePageState extends ConsumerState<HomePage> {
     final quotes = QuoteModel.initialList;
 
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => context.push('/designer'),
+        label: const Text('Create Custom'),
+        icon: const Icon(Icons.palette_rounded),
+        backgroundColor: AppTheme.primary,
+        foregroundColor: Colors.white,
+      ),
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [

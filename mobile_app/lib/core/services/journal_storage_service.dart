@@ -66,6 +66,43 @@ class JournalStorageService {
     });
   }
 
+  static int getStreak() {
+    final journals = getJournals()..sort((a, b) => b.date.compareTo(a.date));
+    if (journals.isEmpty) return 0;
+
+    int streak = 0;
+    DateTime today = DateTime.now();
+    DateTime checkDate = DateTime(today.year, today.month, today.day);
+
+    // If hasn't journaled today, check if they journaled yesterday
+    bool journaledToday = hasJournaledToday();
+    if (!journaledToday) {
+      checkDate = checkDate.subtract(const Duration(days: 1));
+    }
+
+    for (final journal in journals) {
+      final jDate = DateTime(journal.date.year, journal.date.month, journal.date.day);
+      if (jDate.isAtSameMomentAs(checkDate)) {
+        streak++;
+        checkDate = checkDate.subtract(const Duration(days: 1));
+      } else if (jDate.isAfter(checkDate)) {
+        continue;
+      } else {
+        break;
+      }
+    }
+    return streak;
+  }
+
+  static Map<DateTime, int> getActivityMap() {
+    final activity = <DateTime, int>{};
+    for (final journal in getJournals()) {
+      final date = DateTime(journal.date.year, journal.date.month, journal.date.day);
+      activity[date] = (activity[date] ?? 0) + 1;
+    }
+    return activity;
+  }
+
   static Future<void> clearAll() async {
     await _box.clear();
   }

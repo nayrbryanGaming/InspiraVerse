@@ -20,9 +20,14 @@ class MainScaffold extends StatelessWidget {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_outline),
-            activeIcon: Icon(Icons.favorite),
-            label: 'Favorites',
+            icon: Icon(Icons.palette_outlined),
+            activeIcon: Icon(Icons.palette),
+            label: 'Design',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.auto_awesome_rounded),
+            activeIcon: Icon(Icons.auto_awesome),
+            label: 'Journey',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
@@ -37,8 +42,9 @@ class MainScaffold extends StatelessWidget {
   static int _calculateSelectedIndex(BuildContext context) {
     final String location = GoRouterState.of(context).uri.toString();
     if (location.startsWith('/home')) return 0;
-    if (location.startsWith('/favorites')) return 1;
-    if (location.startsWith('/profile')) return 2;
+    if (location.startsWith('/designer')) return 1;
+    if (location.startsWith('/journey')) return 2;
+    if (location.startsWith('/profile')) return 3;
     return 0;
   }
 
@@ -48,9 +54,12 @@ class MainScaffold extends StatelessWidget {
         context.go('/home');
         break;
       case 1:
-        context.go('/favorites');
+        context.go('/designer');
         break;
       case 2:
+        context.go('/journey');
+        break;
+      case 3:
         context.go('/profile');
         break;
     }

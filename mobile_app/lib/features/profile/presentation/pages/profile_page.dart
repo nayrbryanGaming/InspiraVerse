@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/services/journal_storage_service.dart';
@@ -5,6 +6,46 @@ import '../../../core/services/local_storage_service.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
+
+  void _showDeleteConfirmation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Account?'),
+        content: const Text(
+          'This action is permanent and will delete all your favorites, journal entries, and account data from our servers.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              // Purge local data
+              await JournalStorageService.clearAll();
+              await LocalStorageService.clearAll();
+              
+              // Purge Firebase data (if logged in)
+              final user = FirebaseAuth.instance.currentUser;
+              if (user != null) {
+                await user.delete();
+              }
+              
+              if (context.mounted) {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Account and data successfully deleted.')),
+                );
+              }
+            },
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Delete Permanently'),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,9 +101,7 @@ class ProfilePage extends StatelessWidget {
             leading: const Icon(Icons.no_accounts_outlined, color: Colors.redAccent),
             title: const Text('Delete My Account'),
             subtitle: const Text('Permanent removal of all personal data'),
-            onTap: () {
-              // Trigger deletion logic here
-            },
+            onTap: () => _showDeleteConfirmation(context),
           ),
           const Divider(height: 32),
           ListTile(

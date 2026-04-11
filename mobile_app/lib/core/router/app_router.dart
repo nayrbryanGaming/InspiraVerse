@@ -10,6 +10,8 @@ import '../../features/quotes/presentation/pages/category_quotes_page.dart';
 import '../../features/favorites/presentation/pages/favorites_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/share/presentation/pages/share_card_page.dart';
+import '../../features/designer/presentation/pages/quote_designer_screen.dart';
+import '../../features/journey/presentation/pages/growth_dashboard.dart';
 import '../widgets/main_scaffold.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -48,6 +50,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             path: '/profile',
             name: 'profile',
             builder: (context, state) => const ProfilePage(),
+          ),
+          GoRoute(
+            path: '/designer',
+            name: 'designer',
+            builder: (context, state) => const QuoteDesignerScreen(),
+          ),
+          GoRoute(
+            path: '/journey',
+            name: 'journey',
+            builder: (context, state) => const GrowthDashboard(),
           ),
         ],
       ),

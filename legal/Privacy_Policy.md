@@ -9,20 +9,20 @@ This policy applies to our mobile application and its associated services (colle
 ## 1. Information We Collect
 
 ### A. Information You Provide Directly
-*   **Account Information:** If you create an account, we may collect your email address, name, and preferences (such as preferred quote categories).
-*   **User Content:** Quotes you favorite or categories you select are stored to provide a personalized experience.
-*   **Journal Data (Mindset Mirror):** Your personal reflections and journal entries are stored **ONLY locally** on your device by default. If you choose to enable Cloud Sync (coming soon), this data will be encrypted and stored in our secure Firestore database.
+*   **Account Information:** If you create an account, we may collect your email address, name, and preferences.
+*   **User Content (Mindset Journey):** Your personal reflections and journal entries in the **Mindset Journey** are stored **ONLY locally** on your device by default.
+*   **User Content (Designer Studio):** Custom quotes you create using our **Designer Studio** are stored on your device gallery or dedicated app storage. We do not transmit these images to our servers unless you explicitly share them via third-party services.
 
 ### B. Information Collected Automatically (Analytics & Firebase)
 We use Firebase Analytics and Firebase Cloud Services. Automatically collected info includes:
 *   **Device Data:** Device type, operating system version, and unique device identifiers.
-*   **Usage Data:** Which quotes you view, time spent on the app, and sharing metrics.
+*   **Usage Data:** Which features you access (e.g., Designer Studio usage freq, streak maintenance).
 
 ## 2. How We Use Your Information
 
 *   To provide and personalize your experience.
 *   To deliver daily inspiration push notifications.
-*   To understand user engagement for product improvement.
+*   To understand user engagement (via Firebase Analytics) for product improvement.
 
 ## 3. Data Deletion and Account Retention
 

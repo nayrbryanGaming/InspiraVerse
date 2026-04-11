@@ -64,6 +64,14 @@ class NotificationService {
           channelDescription: AppConstants.notificationChannelDesc,
           importance: Importance.high,
           priority: Priority.high,
+          actions: <AndroidNotificationAction>[
+            AndroidNotificationAction(
+              'share',
+              'Share Now 🔗',
+              showsUserInterface: true,
+              cancelNotification: true,
+            ),
+          ],
         ),
         iOS: DarwinNotificationDetails(
           presentAlert: true,

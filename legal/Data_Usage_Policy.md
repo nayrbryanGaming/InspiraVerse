@@ -9,23 +9,23 @@ InspiraVerse believes in extreme transparency. We only collect data that directl
 
 ## 2. High-Utility Features & Analytics
 We utilize **Firebase Analytics** and local storage to power high-value features:
-- **Mindset Mirror (Journaling):** We collect reflection data ONLY on your local device. This data is not transmitted to our servers unless you explicitly opt-in to Cloud Sync.
-- **Mood Insights:** We track which moods are selected to improve our recommendation engine (anonymized).
-- **Popularity Scoring:** We log favorites and shares (without personal identifiers) to rank quotes for the community.
+- **Mindset Journey (Tracking):** Personal reflections and streaks are stored **locally**. Aggregated, anonymized participation data may be used to improve app engagement.
+- **Designer Studio (Creation):** Custom quotes you create using our Designer Studio are stored on your device gallery or dedicated app storage. We do not store these images on our servers.
+- **Actionable Notifications:** Our daily quotes may include "Share" actions. Interacting with these logs a generic "share" event for analytics.
 
 *Why?* These interactive features ensure InspiraVerse provides a unique, high-utility experience that goes beyond static content.
 
 ## 3. Push Notifications Usage
 We utilize **Firebase Cloud Messaging (FCM)**.
 - **Frequency:** Once daily.
-- **Content:** A single motivational quote or a reminder to complete your "Mindset Mirror" reflection.
+- **Content:** A single motivational quote or a reminder to complete your "Mindset Journey" reflection.
 - **Opt-out:** Users can disable this in Settings > Profile at any time.
 
 ## 4. On-Device Storage (Hive)
 We use the **Hive** encrypted on-device database to:
-- Cache quotes for offline access (Subway/Airplane mode).
-- Store your personal **Mindset Mirror** reflections locally.
-- Persist your app preferences (Theme, Notification times).
+- Cache quotes for offline access.
+- Store your personal **Mindset Journey** reflections and streaks locally.
+- Persist your app preferences and Designer Studio configurations.
 
 ## 5. Account Data
 If a user creates an account:

@@ -15,15 +15,17 @@ InspiraVerse is a modern, production-ready mobile application delivering curated
 - An aesthetic, viral share-card generator for Instagram/TikTok.
 - An offline, minimal-distraction reading library.
 
-## ✨ Core Features
-- **Daily Inspiration Engine:** Push notifications tailored to your local timezone.
-- **Mindset Mirror (NEW):** A daily journaling module where users reflect on quotes to build psychological resilience. This feature provides the interactive functional value required for premium app store quality.
-- **Mood-Based Categorization:** Filter quotes based on your current emotional state (Focus, Resilience, Happiness).
-- **Offline Mode:** Hive-powered local caching ensures you have quotes on an airplane or subway.
-- **Shareable Cards:** High-quality gradient text-image exports.
-- **Dark Mode:** Automatic system-wide dark mode support.
+## ✨ Elite Features (Vers. 2.0)
+- **Designer Studio 🎨:** A creative engine allowing users to craft custom inspirational cards with premium typography and Unsplash-ready aesthetics.
+- **Mindset Journey 📈:** A high-utility growth tracker featuring daily streaks, reflection logging, and psychological resilience analytics.
+- **Actionable Daily Inspiration ⚡:** Interactive notifications for rapid sharing and engagement.
+- **Privacy First 🔐:** Integrated data management with persistent account deletion flows and local-first journaling.
+- **Zen Luxury UI:** Staggered glassmorphic transitions and a high-fidelity 'Outfit' typography system.
 
 ---
+
+## 🚀 Competitive Advantage
+Unlike generic quote builders, InspiraVerse is a **Mood-Responsive Ecosystem**. It combines content consumption with creative production and personal analytics, satisfying the strictest 'Minimum Functionality' and 'Originality' standards of the Google Play Store.
 
 ## 🛠 Tech Stack
 **Frontend (Mobile App)**
