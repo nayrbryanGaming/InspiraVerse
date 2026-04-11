@@ -17,11 +17,11 @@ InspiraVerse is a modern, production-ready mobile application delivering curated
 
 ## ✨ Core Features
 - **Daily Inspiration Engine:** Push notifications tailored to your local timezone.
-- **Categorized Feeds:** Filter by Success, Resilience, Mindset, Leadership, etc.
+- **Mindset Mirror (NEW):** A daily journaling module where users reflect on quotes to build psychological resilience. This feature provides the interactive functional value required for premium app store quality.
+- **Mood-Based Categorization:** Filter quotes based on your current emotional state (Focus, Resilience, Happiness).
 - **Offline Mode:** Hive-powered local caching ensures you have quotes on an airplane or subway.
 - **Shareable Cards:** High-quality gradient text-image exports.
-- **Dark Mode:** Sleek, automatic dark mode support.
-- **Freemium Ready:** Setup for premium feature unlocking.
+- **Dark Mode:** Automatic system-wide dark mode support.
 
 ---
 

@@ -9,6 +9,7 @@ import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/services/notification_service.dart';
 import 'core/services/local_storage_service.dart';
+import 'core/services/journal_storage_service.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -22,6 +23,7 @@ void main() async {
   // Initialize Hive for offline storage
   await Hive.initFlutter();
   await LocalStorageService.initialize();
+  await JournalStorageService.initialize();
 
   // Initialize timezone data
   tz.initializeTimeZones();
@@ -29,11 +31,14 @@ void main() async {
   // Initialize notifications
   await NotificationService().initialize();
 
-  // Set system UI overlay style
+  // Set sophisticated system UI overlay style
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: Colors.white,
+      systemNavigationBarIconBrightness: Brightness.dark,
+      systemNavigationBarDividerColor: Colors.transparent,
     ),
   );
 

@@ -7,23 +7,25 @@ This Data Usage Policy details exactly what data InspiraVerse collects and how w
 ## 1. Core Principle
 InspiraVerse believes in extreme transparency. We only collect data that directly improves the user experience. **We do not sell user data to advertising brokers.**
 
-## 2. Analytics Disclosure
-We utilize **Firebase Analytics** to track:
-- App crashes and performance issues.
-- Which quote categories are most popular.
-- Daily active usage to measure product retention.
-- Sharing frequency (to see which quotes are resonant).
+## 2. High-Utility Features & Analytics
+We utilize **Firebase Analytics** and local storage to power high-value features:
+- **Mindset Mirror (Journaling):** We collect reflection data ONLY on your local device. This data is not transmitted to our servers unless you explicitly opt-in to Cloud Sync.
+- **Mood Insights:** We track which moods are selected to improve our recommendation engine (anonymized).
+- **Popularity Scoring:** We log favorites and shares (without personal identifiers) to rank quotes for the community.
 
-*Why?* This helps us curate better psychological datasets and improve app stability.
+*Why?* These interactive features ensure InspiraVerse provides a unique, high-utility experience that goes beyond static content.
 
 ## 3. Push Notifications Usage
 We utilize **Firebase Cloud Messaging (FCM)**.
-- We request explicit permission to send notifications.
-- Notifications are used EXCLUSIVELY to send "Daily Inspiration" quotes based on user-defined schedules.
-- We do not use push notifications for third-party advertising or spam.
+- **Frequency:** Once daily.
+- **Content:** A single motivational quote or a reminder to complete your "Mindset Mirror" reflection.
+- **Opt-out:** Users can disable this in Settings > Profile at any time.
 
-## 4. On-Device Storage
-We use local storage (Hive database) to cache quotes. This allows the app to function flawlessly offline over extended periods without scraping background data.
+## 4. On-Device Storage (Hive)
+We use the **Hive** encrypted on-device database to:
+- Cache quotes for offline access (Subway/Airplane mode).
+- Store your personal **Mindset Mirror** reflections locally.
+- Persist your app preferences (Theme, Notification times).
 
 ## 5. Account Data
 If a user creates an account:

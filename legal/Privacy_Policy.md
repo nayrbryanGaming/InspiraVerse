@@ -11,25 +11,33 @@ This policy applies to our mobile application and its associated services (colle
 ### A. Information You Provide Directly
 *   **Account Information:** If you create an account, we may collect your email address, name, and preferences (such as preferred quote categories).
 *   **User Content:** Quotes you favorite or categories you select are stored to provide a personalized experience.
+*   **Journal Data (Mindset Mirror):** Your personal reflections and journal entries are stored **ONLY locally** on your device by default. If you choose to enable Cloud Sync (coming soon), this data will be encrypted and stored in our secure Firestore database.
 
 ### B. Information Collected Automatically (Analytics & Firebase)
 We use Firebase Analytics and Firebase Cloud Services. Automatically collected info includes:
-*   **Device Data:** Device type, operating system version, unique device identifiers, and mobile network information.
-*   **Usage Data:** Which quotes you view, time spent on the app, feature interaction (like using the "Share Card" feature).
-*   **Location Data:** General, non-precise location (derived from IP address) to serve localized content or times.
+*   **Device Data:** Device type, operating system version, and unique device identifiers.
+*   **Usage Data:** Which quotes you view, time spent on the app, and sharing metrics.
 
 ## 2. How We Use Your Information
 
-*   To provide, maintain, and improve our services.
-*   To personalize your quote feed and daily push notifications.
-*   To understand user engagement (via Firebase Analytics) and improve app features.
-*   To send you daily quote push notifications (if you opt-in via Firebase Cloud Messaging).
+*   To provide and personalize your experience.
+*   To deliver daily inspiration push notifications.
+*   To understand user engagement for product improvement.
 
-## 3. Data Usage & Google Play Store Compliance
+## 3. Data Deletion and Account Retention
 
-**No Sale of Personal Data:** We DO NOT sell your personal data to third-party data brokers.
-**Notifications:** Push notifications are used strictly for delivering daily quotes and app-related content as configured by the user. Users can disable notifications at any time in the app settings.
-**Analytics:** We use analytics strictly for tracking app health, crash reporting, and generic user engagement to improve the product.
+**User Rights:** You have the right to access, export, or delete your data at any time.
+**Account Deletion:** You can delete your account and all associated data via the **"Delete My Account"** button in the Profile/Settings section. This action is irreversible and will immediately purge:
+*   Your Firestore user profile.
+*   Your favorites list.
+*   Your cloud-synced journal entries (if applicable).
+*   Local data can be cleared by using the "Clear Cache" button or by uninstalling the app.
+
+## 4. Google Play Store Compliance
+
+**No Sale of Personal Data:** We DO NOT sell your personal data.
+**Notifications:** Used only for daily quote delivery.
+**Target Audience:** Our app is designed for users aged 13+.
 
 ## 4. Third-Party Services
 We use the following third-party infrastructure:
