@@ -1,36 +1,44 @@
-# Data Usage Policy
+# Data Usage Policy — InspiraVerse
 
-**Last Updated: April 2026**
+**Effective Date:** April 12, 2026
 
-This Data Usage Policy details exactly what data InspiraVerse collects and how we handle it, ensuring full compliance with Google Play Store Developer Policies.
+To comply with the Google Play Store Data Safety section and ensure complete transparency, InspiraVerse Labs outlines exactly how your data is collected, processed, stored, and shared.
 
-## 1. Core Principle
-InspiraVerse believes in extreme transparency. We only collect data that directly improves the user experience. **We do not sell user data to advertising brokers.**
+## 1. Zero Data Sale Policy
+**We do not and will never sell your personal data to any third party.** Your reflections, habits, and preferences are private and are used strictly to enhance your experience within the App.
 
-## 2. High-Utility Features & Analytics
-We utilize **Firebase Analytics** and local storage to power high-value features:
-- **Mindset Journey (Tracking):** Personal reflections and streaks are stored **locally**. Aggregated, anonymized participation data may be used to improve app engagement.
-- **Designer Studio (Creation):** Custom quotes you create using our Designer Studio are stored on your device gallery or dedicated app storage. We do not store these images on our servers.
-- **Actionable Notifications:** Our daily quotes may include "Share" actions. Interacting with these logs a generic "share" event for analytics.
+## 2. What Data We Collect & Why
 
-*Why?* These interactive features ensure InspiraVerse provides a unique, high-utility experience that goes beyond static content.
+### Personal Info
+- **Email Address & Display Name (Optional):** Collected only if you choose to create a cloud backup account via Firebase Authentication. Used for cross-device syncing.
 
-## 3. Push Notifications Usage
-We utilize **Firebase Cloud Messaging (FCM)**.
-- **Frequency:** Once daily.
-- **Content:** A single motivational quote or a reminder to complete your "Mindset Journey" reflection.
-- **Opt-out:** Users can disable this in Settings > Profile at any time.
+### App Activity
+- **Quote Interactions:** We track which quotes you "Favorite" and "Share".
+  - *Purpose:* This directly influences the `popularity_score` algorithm, allowing us to surface the most impactful quotes to the community.
+- **App Interactions:** Page views and feature usage (e.g., Designer Studio, Mindset Journey).
+  - *Purpose:* Analyzed in aggregate via Firebase Analytics to improve app UI/UX.
 
-## 4. On-Device Storage (Hive)
-We use the **Hive** encrypted on-device database to:
-- Cache quotes for offline access.
-- Store your personal **Mindset Journey** reflections and streaks locally.
-- Persist your app preferences and Designer Studio configurations.
+### User-Generated Content
+- **Journal Entries:** Your daily reflections on specific quotes.
+  - *Purpose:* Stored locally on your device (`Hive`) for offline mode. If you authenticate, they are securely synced to your private Firestore document so you do not lose them when changing devices.
 
-## 5. Account Data
-If a user creates an account:
-- We store an email address strictly for authentication and syncing favorites across devices.
-- Users have a permanent "Delete Account" button in the app profile that purges all Firestore data tied to their UID instantly.
+### Device & Diagnostics
+- **Crash Logs & Performance Data:** 
+  - *Purpose:* Collected anonymously to fix bugs and improve app stability.
 
-## 6. Children's Privacy
-InspiraVerse is designed for general audiences. However, we do not knowingly collect personal information from children under 13.
+## 3. Data Encryption & Security
+All data transmitted between your device and our servers (Firebase) is encrypted in transit using industry-standard HTTPS/TLS. Data stored in Firestore is encrypted at rest by Google.
+
+## 4. User Control & Deletion Rights
+You maintain absolute control over your data:
+- **Local Cache:** You can purge offline data via **Profile → Clear Local Cache**.
+- **Account & Cloud Data:** You can trigger a permanent, irrecoverable deletion of all your cloud data via **Profile → Delete My Account**. Our automated backend systems (Functions) will instantly wipe your data from our active databases.
+
+## 5. Third-Party Processing
+We rely on infrastructure provided by Google (Firebase) to run securely:
+- **Firebase Authentication** (Identity)
+- **Cloud Firestore** (Database)
+- **Firebase Analytics** (Usage data metrics)
+- **Firebase Cloud Messaging** (Daily Push Notifications)
+
+By using InspiraVerse, you consent to the processing of your data explicitly as described in this policy.

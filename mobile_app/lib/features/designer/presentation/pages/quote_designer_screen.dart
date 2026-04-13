@@ -1,10 +1,12 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/image_export_service.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/services/haptic_service.dart';
 
 class QuoteDesignerScreen extends ConsumerStatefulWidget {
   const QuoteDesignerScreen({super.key});
@@ -23,6 +25,14 @@ class _QuoteDesignerScreenState extends ConsumerState<QuoteDesignerScreen> {
   double _fontSize = 28;
   TextAlign _textAlign = TextAlign.center;
   bool _isGradient = true;
+  int _selectedTexture = 0; // 0: None, 1: Grain, 2: Minimalist Dots, 3: Soft Paper
+
+  final List<String> _textures = [
+    '',
+    'https://www.transparenttextures.com/patterns/pinstriped-suit.png',
+    'https://www.transparenttextures.com/patterns/micro-fabrics.png',
+    'https://www.transparenttextures.com/patterns/asfalt-dark.png',
+  ];
 
   final List<Color> _presetColors = [
     AppTheme.primary,
@@ -34,151 +44,438 @@ class _QuoteDesignerScreenState extends ConsumerState<QuoteDesignerScreen> {
     const Color(0xFF1F2937),
   ];
 
+  int _activeTab = 0; // 0: Text, 1: Style, 2: Layout
+  String _selectedFont = 'Outfit';
+  
+  final List<String> _premiumFonts = [
+    'Outfit',
+    'Playfair Display',
+    'Dancing Script',
+    'Montserrat',
+    'Caveat',
+    'Cinzel',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: const Text('Designer Studio'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.share_rounded),
-            onPressed: _captureAndShare,
+            icon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10)],
+              ),
+              child: const Icon(Icons.share_rounded, size: 20, color: AppTheme.primary),
+            ),
+            onPressed: () {
+              HapticService.medium();
+              _captureAndShare();
+            },
           ),
+          const SizedBox(width: 16),
         ],
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Screenshot(
-                  controller: _screenshotController,
-                  child: Container(
-                    width: double.infinity,
-                    aspectRatio: 1,
-                    decoration: BoxDecoration(
-                      color: _backgroundColor,
-                      borderRadius: BorderRadius.circular(24),
-                      gradient: _isGradient 
-                        ? LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [_backgroundColor, _backgroundColor.withOpacity(0.7)],
-                          )
-                        : null,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 20,
-                          offset: const Offset(0, 10),
-                        ),
-                      ],
-                    ),
-                    padding: const EdgeInsets.all(40),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.format_quote_rounded, color: Colors.white60, size: 48),
-                        const SizedBox(height: 20),
-                        Text(
-                          _textController.text,
-                          textAlign: _textAlign,
-                          style: GoogleFonts.outfit(
-                            fontSize: _fontSize,
-                            fontWeight: FontWeight.w700,
-                            color: _textColor,
-                            height: 1.3,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              AppTheme.primary.withOpacity(0.05),
+              AppTheme.background,
+            ],
+          ),
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 100, 24, 24),
+                  child: Screenshot(
+                    controller: _screenshotController,
+                    child: Container(
+                      width: double.infinity,
+                      constraints: const BoxConstraints(maxWidth: 500, maxHeight: 500),
+                      decoration: BoxDecoration(
+                        color: _backgroundColor,
+                        borderRadius: BorderRadius.circular(32),
+                        gradient: _isGradient 
+                          ? LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                _backgroundColor,
+                                Color.lerp(_backgroundColor, Colors.black, 0.2) ?? _backgroundColor,
+                              ],
+                            )
+                          : null,
+                        image: _selectedTexture > 0 
+                          ? DecorationImage(
+                              image: NetworkImage(_textures[_selectedTexture]),
+                              repeat: ImageRepeat.repeat,
+                              opacity: 0.1,
+                            )
+                          : null,
+                        boxShadow: [
+                          BoxShadow(
+                            color: _backgroundColor.withOpacity(0.3),
+                            blurRadius: 40,
+                            offset: const Offset(0, 20),
                           ),
-                        ),
-                        const SizedBox(height: 24),
-                        Text(
-                          "— ${_authorController.text}",
-                          style: GoogleFonts.outfit(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: _textColor.withOpacity(0.8),
-                            letterSpacing: 1.2,
+                        ],
+                      ),
+                      padding: const EdgeInsets.all(48),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                _textController.text,
+                                textAlign: _textAlign,
+                                style: GoogleFonts.getFont(
+                                  _selectedFont,
+                                  color: _textColor,
+                                  fontSize: _fontSize,
+                                  fontWeight: FontWeight.w700,
+                                  height: 1.2,
+                                ),
+                              ),
+                              const SizedBox(height: 24),
+                              Row(
+                                mainAxisAlignment: _getAlignmentMainAxisAlignment(),
+                                children: [
+                                  Container(width: 20, height: 1, color: _textColor.withOpacity(0.5)),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    _authorController.text,
+                                    style: GoogleFonts.outfit(
+                                      color: _textColor.withOpacity(0.8),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
+                          // Auto-Brand Watermark
+                          Positioned(
+                            bottom: 0,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: _textColor.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: _textColor.withOpacity(0.1)),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.auto_awesome_rounded, color: _textColor.withOpacity(0.5), size: 10),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    'INSPIRAVERSE',
+                                    style: GoogleFonts.outfit(
+                                      color: _textColor.withOpacity(0.5),
+                                      fontSize: 8,
+                                      fontWeight: FontWeight.w900,
+                                      letterSpacing: 1.5,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
+            _buildPremiumControls(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  MainAxisAlignment _getAlignmentMainAxisAlignment() {
+    switch (_textAlign) {
+      case TextAlign.left: return MainAxisAlignment.start;
+      case TextAlign.right: return MainAxisAlignment.end;
+      default: return MainAxisAlignment.center;
+    }
+  }
+
+  Widget _buildPremiumControls() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(40)),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 20, offset: const Offset(0, -5)),
+        ],
+      ),
+      child: SafeArea(
+        top: false,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildTabItem(0, 'TEXT', Icons.text_fields_rounded),
+                  _buildTabItem(1, 'STYLE', Icons.palette_rounded),
+                  _buildTabItem(2, 'LAYOUT', Icons.layers_rounded),
+                ],
+              ),
+            ),
+            const Divider(height: 32, indent: 24, endIndent: 24),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                child: _activeTab == 0 
+                  ? _buildTextTab() 
+                  : _activeTab == 1 
+                    ? _buildStyleTab() 
+                    : _buildLayoutTab(),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTabItem(int index, String label, IconData icon) {
+    final isActive = _activeTab == index;
+    return GestureDetector(
+      onTap: () {
+        HapticService.selection();
+        setState(() => _activeTab = index);
+      },
+      child: Column(
+        children: [
+          const SizedBox(height: 8),
+          Icon(icon, color: isActive ? AppTheme.primary : AppTheme.textTertiary, size: 24),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: GoogleFonts.outfit(
+              fontSize: 10,
+              fontWeight: FontWeight.w800,
+              color: isActive ? AppTheme.primary : AppTheme.textTertiary,
+              letterSpacing: 1,
+            ),
           ),
-          _buildControls(),
+          const SizedBox(height: 8),
+          if (isActive)
+            Container(width: 20, height: 3, decoration: BoxDecoration(color: AppTheme.primary, borderRadius: BorderRadius.circular(2))),
         ],
       ),
     );
   }
 
-  Widget _buildControls() {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardTheme.color,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, -5)),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildSectionTitle('Content'),
-          TextField(
-            controller: _textController,
-            onChanged: (v) => setState(() {}),
-            decoration: const InputDecoration(hintText: 'Enter quote text...'),
-            maxLines: 2,
+  Widget _buildTextTab() {
+    return Column(
+      key: const ValueKey(0),
+      children: [
+        TextField(
+          controller: _textController,
+          onChanged: (v) => setState(() {}),
+          maxLines: 2,
+          decoration: InputDecoration(
+            hintText: 'Share your wisdom...',
+            filled: true,
+            fillColor: AppTheme.primary.withOpacity(0.02),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
           ),
-          const SizedBox(height: 16),
-          _buildSectionTitle('Appearance'),
-          SizedBox(
-            height: 40,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: _presetColors.length,
-              separatorBuilder: (context, index) => const SizedBox(width: 12),
-              itemBuilder: (context, index) {
-                final color = _presetColors[index];
-                return GestureDetector(
-                  onTap: () => setState(() => _backgroundColor = color),
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: color,
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: _backgroundColor == color ? Colors.white : Colors.transparent,
-                        width: 3,
-                      ),
-                      boxShadow: [
-                        if (_backgroundColor == color)
-                          BoxShadow(color: color.withOpacity(0.4), blurRadius: 8, spreadRadius: 2),
-                      ],
-                    ),
+        ),
+        const SizedBox(height: 12),
+        TextField(
+          controller: _authorController,
+          onChanged: (v) => setState(() {}),
+          decoration: InputDecoration(
+            hintText: 'Author name',
+            prefixText: '— ',
+            filled: true,
+            fillColor: AppTheme.primary.withOpacity(0.02),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStyleTab() {
+    return Column(
+      key: const ValueKey(1),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionTitle('COLORS'),
+        SizedBox(
+          height: 44,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: _presetColors.length,
+            separatorBuilder: (context, index) => const SizedBox(width: 14),
+            itemBuilder: (context, index) {
+              final color = _presetColors[index];
+              return GestureDetector(
+                onTap: () {
+                  HapticService.light();
+                  setState(() => _backgroundColor = color);
+                },
+                child: Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: _backgroundColor == color ? Colors.black : Colors.transparent, width: 2),
+                    boxShadow: [
+                      if (_backgroundColor == color)
+                        BoxShadow(color: color.withOpacity(0.4), blurRadius: 10),
+                    ],
                   ),
-                );
-              },
+                ),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 20),
+        _buildSectionTitle('TYPOGRAPHY'),
+        SizedBox(
+          height: 36,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: _premiumFonts.length,
+            separatorBuilder: (context, index) => const SizedBox(width: 10),
+            itemBuilder: (context, index) {
+              final font = _premiumFonts[index];
+              final isSelected = _selectedFont == font;
+              return ActionChip(
+                label: Text(font, style: GoogleFonts.getFont(font, fontSize: 12, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
+                backgroundColor: isSelected ? AppTheme.primary : AppTheme.primary.withOpacity(0.05),
+                labelStyle: TextStyle(color: isSelected ? Colors.white : AppTheme.primary),
+                side: BorderSide.none,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                onPressed: () {
+                  HapticService.selection();
+                  setState(() => _selectedFont = font);
+                },
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLayoutTab() {
+    return Column(
+      key: const ValueKey(2),
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildSectionTitle('ALIGNMENT'),
+            Row(
+              children: [
+                _buildControlIcon(Icons.format_align_left_rounded, _textAlign == TextAlign.left, () {
+                   HapticService.selection();
+                   setState(() => _textAlign = TextAlign.left);
+                }),
+                _buildControlIcon(Icons.format_align_center_rounded, _textAlign == TextAlign.center, () {
+                   HapticService.selection();
+                   setState(() => _textAlign = TextAlign.center);
+                }),
+                _buildControlIcon(Icons.format_align_right_rounded, _textAlign == TextAlign.right, () {
+                   HapticService.selection();
+                   setState(() => _textAlign = TextAlign.right);
+                }),
+              ],
             ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildSectionTitle('TEXT SIZE'),
+            Expanded(
+              child: Slider(
+                value: _fontSize,
+                min: 16,
+                max: 48,
+                activeColor: AppTheme.primary,
+                inactiveColor: AppTheme.primary.withOpacity(0.1),
+                onChanged: (v) {
+                  // Reduced frequency of haptics for slider
+                  if ((v - _fontSize).abs() > 2) HapticService.light();
+                  setState(() => _fontSize = v);
+                },
+              ),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildSectionTitle('GRADIENT BACKGROUND'),
+            Switch(
+              value: _isGradient,
+              onChanged: (v) {
+                HapticService.light();
+                setState(() => _isGradient = v);
+              },
+              activeColor: AppTheme.primary,
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        _buildSectionTitle('TEXTURE OVERLAY'),
+        SizedBox(
+          height: 36,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: 4,
+            separatorBuilder: (context, index) => const SizedBox(width: 10),
+            itemBuilder: (context, index) {
+              final isSelected = _selectedTexture == index;
+              return ActionChip(
+                label: Text(
+                  index == 0 ? 'Pure' : 'Texture $index',
+                  style: TextStyle(fontSize: 10, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal),
+                ),
+                backgroundColor: isSelected ? AppTheme.primary : AppTheme.primary.withOpacity(0.05),
+                labelStyle: TextStyle(color: isSelected ? Colors.white : AppTheme.primary),
+                side: BorderSide.none,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                onPressed: () {
+                  HapticService.selection();
+                  setState(() => _selectedTexture = index);
+                },
+              );
+            },
           ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              _buildControlIcon(Icons.format_align_left, _textAlign == TextAlign.left, () => setState(() => _textAlign = TextAlign.left)),
-              _buildControlIcon(Icons.format_align_center, _textAlign == TextAlign.center, () => setState(() => _textAlign = TextAlign.center)),
-              _buildControlIcon(Icons.format_align_right, _textAlign == TextAlign.right, () => setState(() => _textAlign = TextAlign.right)),
-              const Spacer(),
-              _buildControlIcon(Icons.gradient_rounded, _isGradient, () => setState(() => _isGradient = !_isGradient)),
-            ],
-          ),
-          const SizedBox(height: 24),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

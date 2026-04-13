@@ -2,43 +2,40 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  // Color Palette - Premium Zen Luxury
-  static const Color primary = Color(0xFF6C63FF);
-  static const Color primaryLight = Color(0xFF9E9AFF);
-  static const Color primaryDark = Color(0xFF4B44D4);
+  // Color Palette - Precise HSL Zen Luxury
+  static const Color primary = Color(0xFF6C63FF); // User Requested Indigo
+  static const Color primaryLight = Color(0xFF8B85FF);
+  static const Color primaryExtraLight = Color(0xFFF0EFFF);
+  static const Color primaryDark = Color(0xFF5A52D5);
   
-  static const Color secondary = Color(0xFFFFB84D);
-  static const Color secondaryLight = Color(0xFFFFD18D);
+  static const Color secondary = Color(0xFFF59E0B); // Amber Glow
+  static const Color secondaryLight = Color(0xFFFCD34D);
   
-  static const Color background = Color(0xFFFBFBFF);
+  static const Color background = Color(0xFFF8FAFC);
   static const Color surface = Color(0xFFFFFFFF);
-  static const Color surfaceVariant = Color(0xFFF3F4F6);
+  static const Color surfaceVariant = Color(0xFFF1F5F9);
   
-  static const Color error = Color(0xFFFC8181);
-  static const Color success = Color(0xFF68D391);
+  static const Color error = Color(0xFFEF4444);
+  static const Color success = Color(0xFF10B981);
 
-  // Dark Colors - Midnight Luxury
-  static const Color darkBackground = Color(0xFF0F0E1A);
-  static const Color darkSurface = Color(0xFF161524);
-  static const Color darkSurfaceVariant = Color(0xFF1E1D31);
-  static const Color darkCard = Color(0xFF252438);
+  // Dark Colors - Deep Velvet Midnight
+  static const Color darkBackground = Color(0xFF0F172A);
+  static const Color darkSurface = Color(0xFF1E293B);
+  static const Color darkSurfaceVariant = Color(0xFF334155);
+  static const Color darkCard = Color(0xFF1E293B);
 
-  // Text Colors
-  static const Color textPrimary = Color(0xFF111827);
-  static const Color textSecondary = Color(0xFF4B5563);
-  static const Color textTertiary = Color(0xFF9CA3AF);
-
-  // Gradients - Ultra Smooth
-  static const LinearGradient primaryGradient = LinearGradient(
+  // Gradients - Aura Transitions
+  static const LinearGradient zenGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [primary, Color(0xFF8B5CF6)],
+    colors: [primary, Color(0xFF8B5CF6)], // Indigo to Purple mix
+    stops: [0.3, 1.0],
   );
 
-  static const LinearGradient glassGradient = LinearGradient(
+  static const LinearGradient glassEffect = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Colors.white24, Colors.white10],
+    colors: [Colors.white70, Colors.white10],
   );
 
   static ThemeData get lightTheme {
@@ -54,13 +51,19 @@ class AppTheme {
         brightness: Brightness.light,
       ),
       scaffoldBackgroundColor: background,
-      textTheme: _textTheme(textPrimary),
-      appBarTheme: _appBarTheme(background, textPrimary),
+      textTheme: _textTheme(const Color(0xFF1E293B)),
+      appBarTheme: _appBarTheme(background, const Color(0xFF1E293B)),
       elevatedButtonTheme: _elevatedButtonTheme(),
       outlinedButtonTheme: _outlinedButtonTheme(),
       cardTheme: _cardTheme(surface),
-      inputDecorationTheme: _inputTheme(textSecondary),
-      bottomNavigationBarTheme: _bottomNavTheme(surface, primary, textTertiary),
+      inputDecorationTheme: _inputTheme(const Color(0xFF475569)),
+      bottomNavigationBarTheme: _bottomNavTheme(surface, primary, const Color(0xFF94A3B8)),
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: darkBackground,
+        contentTextStyle: GoogleFonts.outfit(color: Colors.white),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
     );
   }
 
@@ -89,29 +92,32 @@ class AppTheme {
 
   static TextTheme _textTheme(Color mainColor) => GoogleFonts.outfitTextTheme().copyWith(
     displayLarge: GoogleFonts.outfit(
-      fontSize: 34,
+      fontSize: 42,
       fontWeight: FontWeight.w800,
       color: mainColor,
-      letterSpacing: -1.2,
+      letterSpacing: -1.5,
+      height: 1.1,
     ),
     displayMedium: GoogleFonts.outfit(
-      fontSize: 28,
+      fontSize: 32,
       fontWeight: FontWeight.w700,
       color: mainColor,
-      letterSpacing: -0.8,
+      letterSpacing: -1.0,
+      height: 1.2,
     ),
     headlineLarge: GoogleFonts.outfit(
-      fontSize: 24,
+      fontSize: 26,
       fontWeight: FontWeight.w700,
       color: mainColor,
+      letterSpacing: -0.5,
     ),
     headlineMedium: GoogleFonts.outfit(
-      fontSize: 20,
+      fontSize: 22,
       fontWeight: FontWeight.w600,
       color: mainColor,
     ),
     titleLarge: GoogleFonts.outfit(
-      fontSize: 18,
+      fontSize: 20,
       fontWeight: FontWeight.w600,
       color: mainColor,
     ),
@@ -119,19 +125,19 @@ class AppTheme {
       fontSize: 16,
       fontWeight: FontWeight.w400,
       color: mainColor.withOpacity(0.9),
-      height: 1.5,
+      height: 1.6,
     ),
     bodyMedium: GoogleFonts.outfit(
       fontSize: 14,
       fontWeight: FontWeight.w400,
       color: mainColor.withOpacity(0.7),
-      height: 1.4,
+      height: 1.5,
     ),
     labelLarge: GoogleFonts.outfit(
       fontSize: 14,
-      fontWeight: FontWeight.w700,
+      fontWeight: FontWeight.bold,
       color: primary,
-      letterSpacing: 1.1,
+      letterSpacing: 1.2,
     ),
   );
 

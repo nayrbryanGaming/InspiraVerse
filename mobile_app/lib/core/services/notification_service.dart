@@ -14,9 +14,9 @@ class NotificationService {
   Future<void> initialize() async {
     const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
     const iosSettings = DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
+      requestAlertPermission: false,
+      requestBadgePermission: false,
+      requestSoundPermission: false,
     );
     
     const initSettings = InitializationSettings(
@@ -88,5 +88,27 @@ class NotificationService {
 
   Future<void> cancelAll() async {
     await _notificationsPlugin.cancelAll();
+  }
+
+  Future<bool> requestPermissions(BuildContext context) async {
+    final bool? primed = await PermissionPrimingDialog.show(
+      context,
+      title: 'Daily Inspiration',
+      description: 'We would like to send you a daily curated quote to fuel your morning mindset.',
+      icon: Icons.notifications_active_rounded,
+    );
+
+    if (primed == true) {
+      final iosImplementation = _notificationsPlugin
+          .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>();
+      if (iosImplementation != null) {
+        return await iosImplementation.requestPermissions(
+          alert: true,
+          badge: true,
+          sound: true,
+        ) ?? false;
+      }
+    }
+    return false;
   }
 }

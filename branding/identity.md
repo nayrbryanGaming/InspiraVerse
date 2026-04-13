@@ -1,34 +1,31 @@
-# InspiraVerse Branding System
+# InspiraVerse Branding Identity
 
-## 1. Core Identity
-**Name:** InspiraVerse
-**Tagline:** Daily quotes that fuel your mindset and shape your future.
-**Vibe:** Modern, Clean, Aesthetic, Minimal, Inspiring, High-Performance
+## 💎 Brand Vision
+To become the definitive "Zen Luxury" mindset application for high-performers.
 
-## 2. Color Palette
-- **Primary / Brand:** `#6C63FF` (Deep Vibrant Purple - symbolizes creativity, wisdom, and modern tech).
-- **Secondary / Accent:** `#FFB84D` (Energetic Gold - symbolizes success, morning energy, and warmth).
-- **Background / Surface:** `#F9FAFB` (Off-white - minimizes eye strain, keeps UI clean).
-- **Text Primary:** `#1A1A2E` (Deep navy instead of pure black for softer reading).
-- **Text Secondary:** `#6B7280` (Cool gray).
+## 🎨 Visual System
+- **Tone**: Sophisticated, Minimalist, Stoic.
+- **Core Aesthetic**: Professional Glassmorphism (Frosted glass effects, soft light, deep elevations).
 
-## 3. Typography
-**Primary Font:** `Outfit` (Google Fonts)
-- Used for all Headers, Titles, and Quote Content.
-- Why? Geometric, modern, extremely legible, and feels "premium startup".
+### Color Palette
+- **Primary (Indigo/Wisdom)**: `#6C63FF` - Used for primary actions and active states.
+- **Secondary (Amber/Energy)**: `#FFB84D` - Used for streaks, highlights, and growth metrics.
+- **Background (Soft Pearl)**: `#F9FAFB` - Light mode foundation.
+- **Background (Obsidian)**: `#0F172A` - Dark mode foundation.
 
-**Secondary Font:** `Inter` (Google Fonts - strictly for landing page small text)
-- Used for small UI elements, buttons, and captions.
+### Typography
+- **Primary**: `Outfit` (Modern, geometric, high-readiness).
+- **Secondary (Quotes)**: `Cinzel` or `Playfair Display` (Sophisticated, timeless).
 
-## 4. Logo Generation Profile
-**Concept:** Minimalist infinite speech bubble with a spark/star icon.
-**Meaning:** Infinite inspiration, voice of wisdom, and continuous personal growth.
+## 🏷 Logo Concept
+**Infinite Spark**: A minimalist speech bubble forming an infinity loop, with a single 4-point spark at the center.
+- **Meaning**: Infinite wisdom, the spark of inspiration, the cycle of growth.
 
-**AI Image Generator Prompt (Midjourney / DALL-E):**
-> Minimalist app logo design for a motivational app. An abstract minimal geometric speech bubble blending into an infinity symbol, with a tiny spark/star icon inside or near it. Flat vector style, clean lines, solid background. Primary colors are vibrant purple (#6C63FF) and a touch of gold/orange gradient. No text. Apple App store aesthetic, modern tech startup style, white sleek background.
+### AI Image Generator Prompt (For Logo)
+> High-end minimalist logomark for a mobile app named 'InspiraVerse'. A singular infinite loop line forming a subtle speech bubble shape. Inside the loop, a sharp, elegant 4-pointed star spark icon. Vector style, flat design, deep flat indigo color #6C63FF against a pure pearl white background. Professional, tech-startup aesthetic, extremely clean lines.
 
-## 5. UI/UX Principles
-1. **Zero Clutter:** The quote is the hero. The UI must get out of the way.
-2. **Glassmorphism:** Use subtle blurs on share cards for a premium feel.
-3. **Micro-animations:** Elements should fade in softly or slide up. Nothing harsh.
-4. **Haptic Feedback:** The user should feel a light vibration when they save a quote or share it.
+## 🗣 Brand Voice
+- **Direct**: No fluff.
+- **Empowering**: Focused on agency and action.
+- **Calm**: Minimal distraction.
+```
