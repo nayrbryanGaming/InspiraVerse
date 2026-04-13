@@ -220,43 +220,57 @@ class _QuoteDesignerScreenState extends ConsumerState<QuoteDesignerScreen> {
   }
 
   Widget _buildPremiumControls() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(40)),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 20, offset: const Offset(0, -5)),
-        ],
-      ),
-      child: SafeArea(
-        top: false,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 40),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(32),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
+          child: Container(
+            decoration: BoxDecoration(
+              color: AppTheme.darkSurface.withOpacity(0.85),
+              borderRadius: BorderRadius.circular(32),
+              border: Border.all(color: Colors.white.withOpacity(0.1)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 30,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+            ),
+            child: SafeArea(
+              top: false,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  _buildTabItem(0, 'TEXT', Icons.text_fields_rounded),
-                  _buildTabItem(1, 'STYLE', Icons.palette_rounded),
-                  _buildTabItem(2, 'LAYOUT', Icons.layers_rounded),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _buildTabItem(0, 'TEXT', Icons.text_fields_rounded),
+                        _buildTabItem(1, 'STYLE', Icons.palette_rounded),
+                        _buildTabItem(2, 'LAYOUT', Icons.layers_rounded),
+                      ],
+                    ),
+                  ),
+                  const Divider(height: 24, indent: 24, endIndent: 24, color: Colors.white10),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      child: _activeTab == 0 //
+                        ? _buildTextTab() //
+                        : _activeTab == 1 //
+                          ? _buildStyleTab() //
+                          : _buildLayoutTab(),
+                    ),
+                  ),
                 ],
               ),
             ),
-            const Divider(height: 32, indent: 24, endIndent: 24),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 300),
-                child: _activeTab == 0 
-                  ? _buildTextTab() 
-                  : _activeTab == 1 
-                    ? _buildStyleTab() 
-                    : _buildLayoutTab(),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -272,20 +286,20 @@ class _QuoteDesignerScreenState extends ConsumerState<QuoteDesignerScreen> {
       child: Column(
         children: [
           const SizedBox(height: 8),
-          Icon(icon, color: isActive ? AppTheme.primary : AppTheme.textTertiary, size: 24),
+          Icon(icon, color: isActive ? AppTheme.primaryLight : Colors.white54, size: 24),
           const SizedBox(height: 4),
           Text(
             label,
             style: GoogleFonts.outfit(
               fontSize: 10,
               fontWeight: FontWeight.w800,
-              color: isActive ? AppTheme.primary : AppTheme.textTertiary,
+              color: isActive ? AppTheme.primaryLight : Colors.white54,
               letterSpacing: 1,
             ),
           ),
           const SizedBox(height: 8),
           if (isActive)
-            Container(width: 20, height: 3, decoration: BoxDecoration(color: AppTheme.primary, borderRadius: BorderRadius.circular(2))),
+            Container(width: 20, height: 3, decoration: BoxDecoration(color: AppTheme.primaryLight, borderRadius: BorderRadius.circular(2))),
         ],
       ),
     );
@@ -299,10 +313,12 @@ class _QuoteDesignerScreenState extends ConsumerState<QuoteDesignerScreen> {
           controller: _textController,
           onChanged: (v) => setState(() {}),
           maxLines: 2,
+          style: const TextStyle(color: Colors.white),
           decoration: InputDecoration(
             hintText: 'Share your wisdom...',
+            hintStyle: const TextStyle(color: Colors.white38),
             filled: true,
-            fillColor: AppTheme.primary.withOpacity(0.02),
+            fillColor: Colors.white.withOpacity(0.05),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
           ),
         ),
@@ -310,11 +326,14 @@ class _QuoteDesignerScreenState extends ConsumerState<QuoteDesignerScreen> {
         TextField(
           controller: _authorController,
           onChanged: (v) => setState(() {}),
+          style: const TextStyle(color: Colors.white),
           decoration: InputDecoration(
             hintText: 'Author name',
+            hintStyle: const TextStyle(color: Colors.white38),
             prefixText: '— ',
+            prefixStyle: const TextStyle(color: Colors.white54),
             filled: true,
-            fillColor: AppTheme.primary.withOpacity(0.02),
+            fillColor: Colors.white.withOpacity(0.05),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
           ),
         ),
@@ -371,8 +390,8 @@ class _QuoteDesignerScreenState extends ConsumerState<QuoteDesignerScreen> {
               final isSelected = _selectedFont == font;
               return ActionChip(
                 label: Text(font, style: GoogleFonts.getFont(font, fontSize: 12, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
-                backgroundColor: isSelected ? AppTheme.primary : AppTheme.primary.withOpacity(0.05),
-                labelStyle: TextStyle(color: isSelected ? Colors.white : AppTheme.primary),
+                backgroundColor: isSelected ? AppTheme.primaryLight : Colors.white.withOpacity(0.05),
+                labelStyle: TextStyle(color: isSelected ? Colors.white : Colors.white70),
                 side: BorderSide.none,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 onPressed: () {
@@ -463,8 +482,8 @@ class _QuoteDesignerScreenState extends ConsumerState<QuoteDesignerScreen> {
                   index == 0 ? 'Pure' : 'Texture $index',
                   style: TextStyle(fontSize: 10, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal),
                 ),
-                backgroundColor: isSelected ? AppTheme.primary : AppTheme.primary.withOpacity(0.05),
-                labelStyle: TextStyle(color: isSelected ? Colors.white : AppTheme.primary),
+                backgroundColor: isSelected ? AppTheme.primaryLight : Colors.white.withOpacity(0.05),
+                labelStyle: TextStyle(color: isSelected ? Colors.white : Colors.white70),
                 side: BorderSide.none,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 onPressed: () {
@@ -487,7 +506,7 @@ class _QuoteDesignerScreenState extends ConsumerState<QuoteDesignerScreen> {
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
           letterSpacing: 1.5,
           fontWeight: FontWeight.w800,
-          color: AppTheme.textTertiary,
+          color: Colors.white54,
         ),
       ),
     );
@@ -497,7 +516,7 @@ class _QuoteDesignerScreenState extends ConsumerState<QuoteDesignerScreen> {
     return IconButton(
       onPressed: onTap,
       icon: Icon(icon),
-      color: isActive ? AppTheme.primary : AppTheme.textTertiary,
+      color: isActive ? AppTheme.primaryLight : Colors.white54,
     );
   }
 
