@@ -1,0 +1,39 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Quotes: Publicly readable, immutable by users
+    match /quotes/{quoteId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    
+    // 2. Daily Quotes: Publicly readable, immutable by users
+    match /daily_quotes/{date} {
+      allow read: if true;
+      allow write: if false;
+    }
+    
+    // 3. User Clusters: Only accessible by owner
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      // Subcollections (Journals, Favorites, Settings)
+      match /{allPaths=**} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+    
+    // 4. User Activity: Write-only by owner (for logging), read-disabled for privacy
+    match /user_activity/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create, update: if request.auth != null && request.auth.uid == userId;
+      allow delete: if false; // Only via backend onUserDeletion
+    }
+    
+    // 5. Global Config (if any)
+    match /config/{configId} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}

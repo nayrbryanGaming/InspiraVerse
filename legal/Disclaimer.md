@@ -1,21 +1,20 @@
-# Disclaimer — InspiraVerse
+# Medical Disclaimer for InspiraVerse
 
-**Effective Date:** April 12, 2026
+**Last Updated: April 21, 2026**
 
-The information provided by InspiraVerse Labs ("we," "us," or "our") on the InspiraVerse mobile application is for general informational and motivational purposes only. 
+The information provided by InspiraVerse ("we," "our," or "us") in the InspiraVerse mobile application is for general informational purposes only.
 
-## No Professional Advice
-The quotes, reflections, and insights provided within the App are curated to promote a positive mindset and mental resilience. However, this content **does not constitute professional psychological, psychiatric, or medical advice**. 
+## 1. Not Medical Advice
+The content provided in InspiraVerse, including quotes, reflections, and mindfulness exercises, is not intended to be a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.
 
-If you are experiencing severe mental distress, depression, or burnout, please consult a qualified healthcare or mental health professional. Do not disregard professional medical advice or delay seeking it because of something you have read on our App.
+## 2. No Professional-Patient Relationship
+Use of the InspiraVerse application does not create a professional-patient relationship between you and InspiraVerse.
 
-## Accuracy of Information
-While we strive to provide accurate and carefully curated content, we make no representation or warranty of any kind, express or implied, regarding the accuracy, adequacy, validity, reliability, availability, or completeness of any information on the App.
+## 3. Limitation of Liability
+InspiraVerse is not responsible or liable for any advice, course of treatment, diagnosis, or any other information, services, or products that you obtain through this application.
 
-## No Guaranteed Results
-Individual results may vary. Engaging with the App’s streaks, journaling, and daily quotes is a tool for personal growth, but we do not guarantee specific psychological shifts or improvements in your personal or professional life.
+## 4. Emergency Situations
+If you are in a crisis or an emergency situation, please contact your local emergency services or a crisis mental health professional immediately. Do not rely on the InspiraVerse application for emergency assistance.
 
-## Third-Party Content
-The App may contain links or references to third-party content (e.g., origin of quotes). We do not control or endorse and are not responsible for third-party content.
-
-By using InspiraVerse, you acknowledge and agree to this disclaimer.
+## 5. Personal Responsibility
+You acknowledge and agree that you are using the InspiraVerse application at your own risk and that you are solely responsible for any decisions or actions you take based on the information provided in the app.

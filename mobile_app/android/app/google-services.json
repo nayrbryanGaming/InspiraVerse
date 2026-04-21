@@ -1,0 +1,28 @@
+{
+  "project_info": {
+    "project_number": "1234567890",
+    "project_id": "inspiraverse-mock",
+    "storage_bucket": "inspiraverse-mock.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1234567890:android:mock",
+        "android_client_info": {
+          "package_name": "com.nayrbryan.inspiraverse"
+        }
+      },
+      "api_key": [
+        {
+          "current_key": "AIzaSy_MOCK_API_KEY_FOR_COMPILATION"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

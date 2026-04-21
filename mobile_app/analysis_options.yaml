@@ -1,0 +1,32 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "lib/generated_plugin_registrant.dart"
+  errors:
+    deprecated_member_use: ignore # Allow withOpacity for compatibility with older Flutter
+    todo: ignore
+
+linter:
+  rules:
+    - always_declare_return_types
+    - cancel_subscriptions
+    - close_sinks
+    - comment_references
+    - empty_statements
+    - library_names
+    - package_names
+    - prefer_const_constructors
+    - prefer_final_locals
+    - test_types_in_equals
+    - throw_in_finally
+    - type_init_formals
+    - unawaited_futures
+    - unnecessary_brace_in_string_interps
+    - unnecessary_const
+    - unnecessary_new
+    - unnecessary_overrides
+    - unnecessary_this
+    - use_key_in_widget_constructors

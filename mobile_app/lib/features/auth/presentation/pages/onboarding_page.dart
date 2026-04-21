@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../core/services/local_storage_service.dart';
-import '../../../core/theme/app_theme.dart';
-import '../../../core/services/haptic_service.dart';
+import '../../../../core/services/local_storage_service.dart';
+import '../../../../core/theme/app_theme.dart';
+import '../../../../core/services/haptic_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -191,17 +192,65 @@ class _OnboardingPageState extends State<OnboardingPage> {
           const SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Text(
-              data.desc,
-              textAlign: TextAlign.center,
-              style: GoogleFonts.outfit(
-                fontSize: 16,
-                color: AppTheme.textSecondary,
-                height: 1.5,
-              ),
+            child: Column(
+              children: [
+                Text(
+                  data.desc,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.outfit(
+                    fontSize: 16,
+                    color: AppTheme.textSecondary,
+                    height: 1.5,
+                  ),
+                ),
+                if (_currentPage == _pages.length - 1) ...[
+                  const SizedBox(height: 32),
+                  _buildLegalFooter(),
+                ],
+              ],
             ),
           ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.2),
         ],
+      ),
+    );
+  }
+
+  Widget _buildLegalFooter() {
+    return Column(
+      children: [
+        Text(
+          'By continuing, you agree to our',
+          style: GoogleFonts.outfit(fontSize: 12, color: AppTheme.textTertiary),
+        ),
+        const SizedBox(height: 4),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildLegalLink('Terms', 'https://inspiraverse.app/legal/terms'),
+            Text('  &  ', style: TextStyle(color: AppTheme.textTertiary.withOpacity(0.5))),
+            _buildLegalLink('Privacy Policy', 'https://inspiraverse.app/legal/privacy'),
+          ],
+        ),
+      ],
+    ).animate().fadeIn(delay: 600.ms);
+  }
+
+  Widget _buildLegalLink(String text, String url) {
+    return GestureDetector(
+      onTap: () async {
+        final uri = Uri.parse(url);
+        if (await canLaunchUrl(uri)) {
+          await launchUrl(uri, mode: LaunchMode.externalApplication);
+        }
+      },
+      child: Text(
+        text,
+        style: GoogleFonts.outfit(
+          fontSize: 12,
+          color: AppTheme.primary,
+          fontWeight: FontWeight.bold,
+          decoration: TextDecoration.underline,
+        ),
       ),
     );
   }

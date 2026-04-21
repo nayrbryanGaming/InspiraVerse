@@ -4,7 +4,7 @@ class AppConstants {
   // App Info
   static const String appName = 'InspiraVerse';
   static const String appTagline = 'Daily quotes that fuel your mindset and shape your future.';
-  static const String appVersion = '1.0.0';
+  static const String appVersion = '1.0.0+18';
 
   // Firestore Collections
   static const String usersCollection = 'users';
@@ -25,11 +25,11 @@ class AppConstants {
     'Success',
     'Resilience',
     'Mindset',
-    'Happiness',
-    'Leadership',
+    'Mindfulness',
+    'Growth',
     'Wisdom',
-    'Love',
     'Courage',
+    'Leadership',
   ];
 
   static const Map<String, String> categoryEmojis = {
@@ -38,11 +38,11 @@ class AppConstants {
     'Success': '🏆',
     'Resilience': '💪',
     'Mindset': '🧠',
-    'Happiness': '😊',
-    'Leadership': '👑',
+    'Mindfulness': '🧘',
+    'Growth': '🌱',
     'Wisdom': '🦉',
-    'Love': '❤️',
     'Courage': '⚡',
+    'Leadership': '👑',
   };
 
   // Notification

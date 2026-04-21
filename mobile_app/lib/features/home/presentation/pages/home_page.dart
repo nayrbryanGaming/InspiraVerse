@@ -10,6 +10,8 @@ import '../../../../core/constants/app_constants.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/services/journal_storage_service.dart';
 import '../../../../core/services/haptic_service.dart';
+import '../providers/home_providers.dart';
+import '../widgets/home_widgets.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -27,9 +29,9 @@ class _HomePageState extends ConsumerState<HomePage> {
   void initState() {
     super.initState();
     _scrollController.addListener(() {
-      setState(() {
-        _scrollOffset = _scrollController.offset;
-      });
+      if (mounted) {
+        setState(() => _scrollOffset = _scrollController.offset);
+      }
     });
   }
 
@@ -39,161 +41,164 @@ class _HomePageState extends ConsumerState<HomePage> {
     super.dispose();
   }
 
-  Color _getMoodColor(String mood) {
-    switch (mood) {
-      case 'Motivation': return AppTheme.primary;
-      case 'Success': return const Color(0xFFF59E0B);
-      case 'Mindfulness': return const Color(0xFF10B981);
-      case 'Wisdom': return const Color(0xFF8B5CF6);
-      case 'Resilience': return const Color(0xFFEC4899);
-      case 'Focus': return const Color(0xFF3B82F6);
-      default: return AppTheme.primary;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final quotes = QuoteModel.initialList;
-
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           HapticService.medium();
           context.push('/designer');
         },
-        label: const Text('Create Custom'),
+        label: Text('Design Quote', style: GoogleFonts.outfit(fontWeight: FontWeight.w700)),
         icon: const Icon(Icons.palette_rounded),
         backgroundColor: AppTheme.primary,
         foregroundColor: Colors.white,
       ).animate().scale(delay: 1.seconds).shimmer(duration: 2.seconds),
-      body: CustomScrollView(
-        controller: _scrollController,
-        physics: const BouncingScrollPhysics(),
-        slivers: [
-          _buildAppBar(),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 24),
-                  _buildHeader('How are you feeling?', context),
-                  const SizedBox(height: 16),
-                  _buildMoodSelector(),
-                  const SizedBox(height: 32),
-                  _buildHeader('Daily Inspiration', context),
-                  const SizedBox(height: 16),
-                  _buildDailyCard(context, quotes.first),
-                  const SizedBox(height: 32),
-                  _buildHeader('Mindset Mirror', context),
-                  const SizedBox(height: 16),
-                  _buildJournalSection(quotes.first),
-                ],
+      body: ref.watch(filteredQuotesProvider(_selectedMood)).when(
+        data: (quotes) {
+          final dailyQuote = quotes.isNotEmpty ? quotes.first : QuoteModel.initialList.first;
+
+          return CustomScrollView(
+            controller: _scrollController,
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              _buildAppBar(),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 24),
+                      _buildHeader('How is your heart today?', context),
+                      const SizedBox(height: 16),
+                      MoodSelector(
+                        selectedMood: _selectedMood,
+                        onMoodSelected: (mood) => setState(() => _selectedMood = mood),
+                      ),
+                      const SizedBox(height: 32),
+                      _buildHeader('Wisdom for the Soul', context),
+                      const SizedBox(height: 16),
+                      InspirationCard(
+                        quote: dailyQuote,
+                        onTap: () {
+                          HapticService.light();
+                          context.push('/quote/${dailyQuote.quoteId}');
+                        },
+                      ),
+                      const SizedBox(height: 48),
+                      _buildHeader('Daily Reflection', context),
+                      const SizedBox(height: 16),
+                      JournalReflectionCard(
+                        quote: dailyQuote,
+                        onSaved: () => setState(() {}),
+                      ),
+                      const SizedBox(height: 48),
+                      _buildHeader('Your Resilience Journey', context),
+                      const SizedBox(height: 16),
+                      const ResilienceChart(),
+                      const SizedBox(height: 48),
+                      _buildHeader('Curated Wisdom', context),
+                      const SizedBox(height: 16),
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.all(20),
-            sliver: SliverToBoxAdapter(
-              child: _buildHeader('Refined for You', context),
-            ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final quote = quotes[index % quotes.length];
-                  return _buildQuoteListItem(context, quote, index);
-                },
-                childCount: quotes.length,
+              SliverPersistentHeader(
+                pinned: true,
+                delegate: _SearchHeaderDelegate(),
               ),
-            ),
-          ),
-          const SliverPadding(padding: EdgeInsets.only(bottom: 32)),
-        ],
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final quote = quotes[index % quotes.length];
+                      return _buildQuoteListItem(context, quote, index);
+                    },
+                    childCount: quotes.length,
+                  ),
+                ),
+              ),
+              const SliverPadding(padding: EdgeInsets.only(bottom: 100)),
+            ],
+          );
+        },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, stack) => Center(child: Text('Error: $err')),
       ),
     );
   }
 
   Widget _buildAppBar() {
     return SliverAppBar(
-      expandedHeight: 120,
-      collapsedHeight: 70,
+      expandedHeight: 140,
+      collapsedHeight: 80,
       stretch: true,
       pinned: true,
       backgroundColor: Colors.transparent,
+      elevation: 0,
       flexibleSpace: FlexibleSpaceBar(
         stretchModes: const [StretchMode.blurBackground, StretchMode.zoomBackground],
         background: Stack(
           children: [
-            AnimatedContainer(
-              duration: 600.ms,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    _getMoodColor(_selectedMood).withOpacity(0.15),
-                    AppTheme.background,
-                  ],
-                ),
-              ),
-            ),
-            // Parallax Sparkle Layer
+            Container(decoration: const BoxDecoration(gradient: AppTheme.auraGradient)),
+            // Parallax Glow
             Positioned(
-              top: -_scrollOffset * 0.2,
-              right: 20,
-              child: const Icon(Icons.auto_awesome_rounded, color: Colors.white, opacity: 0.1, size: 100)
-                  .animate(onPlay: (c) => c.repeat())
-                  .rotate(duration: 10.seconds)
-                  .scale(begin: const Offset(0.8, 0.8), end: const Offset(1.2, 1.2), duration: 2.seconds, curve: Curves.easeInOut),
+              top: -50 - (_scrollOffset * 0.2),
+              right: -50,
+              child: Container(
+                width: 250,
+                height: 250,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white.withOpacity(0.1),
+                ),
+              ).animate(onPlay: (c) => c.repeat()).scale(duration: 3.seconds, curve: Curves.easeInOut),
             ),
           ],
         ),
-        titlePadding: const EdgeInsets.only(left: 20, bottom: 16),
-        title: Row(
+        titlePadding: const EdgeInsets.only(left: 24, bottom: 20),
+        title: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'InspiraVerse',
-                  style: GoogleFonts.outfit(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 22,
-                    color: AppTheme.primary,
-                    letterSpacing: -0.5,
-                  ),
-                ),
-                Text(
-                  'Your daily spark of wisdom',
-                  style: GoogleFonts.outfit(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 10,
-                    color: AppTheme.textSecondary.withOpacity(0.6),
-                  ),
-                ),
-              ],
+            Text(
+              'InspiraVerse',
+              style: GoogleFonts.outfit(
+                fontWeight: FontWeight.w900,
+                fontSize: 24,
+                color: Colors.white,
+                letterSpacing: -1.0,
+              ),
+            ),
+            Text(
+              'Cultivating Inner Peace',
+              style: GoogleFonts.outfit(
+                fontWeight: FontWeight.w500,
+                fontSize: 10,
+                color: Colors.white70,
+                letterSpacing: 1.2,
+              ),
             ),
           ],
         ),
       ),
       actions: [
+        _buildStreakBadge(),
+        const SizedBox(width: 8),
         IconButton(
-          onPressed: () => HapticService.light(),
+          onPressed: () {
+            HapticService.light();
+            context.push('/profile');
+          },
           icon: Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Colors.white.withOpacity(0.2),
               shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))
-              ],
             ),
-            child: const Icon(Icons.notifications_none_rounded, size: 22, color: AppTheme.primary),
+            child: const Icon(Icons.person_outline_rounded, size: 22, color: Colors.white),
           ),
         ),
         const SizedBox(width: 16),
@@ -201,295 +206,86 @@ class _HomePageState extends ConsumerState<HomePage> {
     );
   }
 
+  Widget _buildStreakBadge() {
+    final streak = JournalStorageService.getStreak();
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.white.withOpacity(0.1)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.local_fire_department_rounded, size: 18, color: Colors.white),
+          const SizedBox(width: 6),
+          Text(
+            '$streak',
+            style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 15, color: Colors.white),
+          ),
+        ],
+      ),
+    ).animate().scale().shimmer(delay: 2.seconds);
+  }
+
   Widget _buildHeader(String title, BuildContext context) {
     return Text(
       title,
-      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.w800,
-            letterSpacing: -0.5,
-          ),
+      style: GoogleFonts.outfit(
+        fontWeight: FontWeight.w800,
+        fontSize: 22,
+        letterSpacing: -0.5,
+        color: AppTheme.textPrimary,
+      ),
     ).animate().fadeIn(duration: 400.ms).slideX(begin: -0.1);
-  }
-
-  Widget _buildMoodSelector() {
-    return SizedBox(
-      height: 44,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        itemCount: AppConstants.quoteCategories.length,
-        separatorBuilder: (context, index) => const SizedBox(width: 10),
-        itemBuilder: (context, index) {
-          final mood = AppConstants.quoteCategories[index];
-          final isSelected = _selectedMood == mood;
-          return GestureDetector(
-            onTap: () {
-              HapticService.selection();
-              setState(() => _selectedMood = mood);
-            },
-            child: AnimatedContainer(
-              duration: 300.ms,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              decoration: BoxDecoration(
-                color: isSelected ? AppTheme.primary : AppTheme.primary.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: isSelected
-                    ? [BoxShadow(color: AppTheme.primary.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 4))]
-                    : [],
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                '${AppConstants.categoryEmojis[mood]} $mood',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: isSelected ? Colors.white : AppTheme.textSecondary,
-                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                    ),
-              ),
-            ),
-          ).animate().fadeIn(delay: (index * 50).ms);
-        },
-      ),
-    );
-  }
-
-  Widget _buildDailyCard(BuildContext context, QuoteModel quote) {
-    return GestureDetector(
-      onTap: () {
-        HapticService.light();
-        context.push('/quote/${quote.quoteId}');
-      },
-      child: Container(
-        height: 280,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(32),
-          boxShadow: [
-            BoxShadow(
-              color: _getMoodColor(_selectedMood).withOpacity(0.2),
-              blurRadius: 30,
-              offset: const Offset(0, 15),
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(32),
-          child: Stack(
-            children: [
-              Image.network(
-                'https://images.unsplash.com/photo-1499336315816-097655dcfbda?auto=format&fit=crop&q=80&w=1000',
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: double.infinity,
-              ).animate().scale(begin: const Offset(1.0, 1.0), end: const Offset(1.1, 1.1), duration: 20.seconds),
-              // Ultra-Premium Particles Overlay
-              ...List.generate(5, (i) => Positioned(
-                top: 50.0 + (i * 30),
-                right: 30.0 + (i * 10),
-                child: const Icon(Icons.auto_awesome, color: Colors.white, size: 8)
-                    .animate(onPlay: (c) => c.repeat())
-                    .fadeIn(duration: 1.seconds)
-                    .then()
-                    .fadeOut(delay: 1.seconds)
-                    .then()
-                    .moveY(begin: 0, end: -20, duration: 2.seconds),
-              )),
-              Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topRight,
-                    end: Alignment.bottomLeft,
-                    colors: [
-                      Colors.transparent,
-                      Colors.black.withOpacity(0.7),
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(32),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        'QUOTE OF THE DAY',
-                        style: GoogleFonts.outfit(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 10,
-                          letterSpacing: 2.0,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      quote.text,
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: -0.5,
-                            height: 1.2,
-                          ),
-                      maxLines: 4,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        const CircleAvatar(
-                          radius: 12,
-                          backgroundImage: NetworkImage('https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop'),
-                        ),
-                        const SizedBox(width: 10),
-                        Text(
-                          quote.author,
-                          style: GoogleFonts.outfit(
-                            color: Colors.white.withOpacity(0.9),
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                          ),
-                        ),
-                        const Spacer(),
-                        Icon(Icons.arrow_forward_ios_rounded, color: Colors.white.withOpacity(0.5), size: 16),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ).animate().fadeIn(duration: 800.ms).slideY(begin: 0.1, curve: Curves.easeOutCirc),
-    );
-  }
-
-  Widget _buildJournalSection(QuoteModel quote) {
-    final journal = JournalStorageService.getJournalForQuote(quote.quoteId);
-    final isDone = journal != null;
-    final controller = TextEditingController(text: journal?.reflection ?? '');
-
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardTheme.color,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppTheme.primary.withOpacity(0.05)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: AppTheme.primary.withOpacity(0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.edit_note_rounded, size: 20, color: AppTheme.primary),
-              ),
-              const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Daily Reflection',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
-                  ),
-                  Text(
-                    isDone ? 'Mindset set for today' : 'What does this mean to you?',
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                ],
-              ),
-              const Spacer(),
-              if (isDone) const Icon(Icons.check_circle_rounded, color: AppTheme.success, size: 28).animate().scale().rotate(),
-            ],
-          ),
-          const SizedBox(height: 20),
-          if (!isDone)
-            TextField(
-              controller: controller,
-              maxLines: 3,
-              style: Theme.of(context).textTheme.bodyMedium,
-              decoration: InputDecoration(
-                hintText: 'Type your reflection here...',
-                filled: true,
-                fillColor: AppTheme.primary.withOpacity(0.02),
-              ),
-            ),
-          if (isDone)
-            Container(
-              padding: const EdgeInsets.all(16),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: AppTheme.primary.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Text(
-                journal.reflection,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic),
-              ),
-            ),
-          const SizedBox(height: 16),
-          if (!isDone)
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () async {
-                  if (controller.text.isNotEmpty) {
-                    HapticService.success();
-                    await JournalStorageService.saveJournal(quote.quoteId, controller.text);
-                    setState(() {});
-                  }
-                },
-                child: const Text('Save Reflection'),
-              ),
-            ),
-        ],
-      ),
-    ).animate().fadeIn(delay: 600.ms, duration: 400.ms);
   }
 
   Widget _buildQuoteListItem(BuildContext context, QuoteModel quote, int index) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 18),
       decoration: BoxDecoration(
-        color: Theme.of(context).cardTheme.color,
-        borderRadius: BorderRadius.circular(24),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(28),
         border: Border.all(color: AppTheme.primary.withOpacity(0.05)),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 15, offset: const Offset(0, 8))
+        ],
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.all(20),
+        contentPadding: const EdgeInsets.all(24),
         title: Text(
           quote.text,
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+          style: GoogleFonts.outfit(fontWeight: FontWeight.w600, fontSize: 17, height: 1.4),
         ),
         subtitle: Padding(
-          padding: const EdgeInsets.only(top: 12.0),
+          padding: const EdgeInsets.only(top: 16.0),
           child: Row(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: AppTheme.primary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
+                  color: AppTheme.primary.withOpacity(0.08),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
-                  quote.category,
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppTheme.primary),
+                  quote.category.toUpperCase(),
+                  style: GoogleFonts.outfit(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w900,
+                    color: AppTheme.primary,
+                    letterSpacing: 1.0,
+                  ),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 14),
               Text(
-                quote.author,
-                style: Theme.of(context).textTheme.bodySmall,
+                '— ${quote.author}',
+                style: GoogleFonts.outfit(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: AppTheme.textSecondary,
+                ),
               ),
             ],
           ),
@@ -499,6 +295,56 @@ class _HomePageState extends ConsumerState<HomePage> {
           context.push('/quote/${quote.quoteId}');
         },
       ),
-    ).animate().fadeIn(delay: (index * 100).ms, duration: 400.ms).slideY(begin: 0.1);
+    ).animate().fadeIn(delay: (index * 80).ms, duration: 500.ms).slideY(begin: 0.1);
   }
+}
+
+class _SearchHeaderDelegate extends SliverPersistentHeaderDelegate {
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return ClipRRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          color: AppTheme.background.withOpacity(0.8),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          child: Consumer(
+            builder: (context, ref, child) {
+              return TextField(
+                onChanged: (value) => ref.read(searchControllerProvider.notifier).state = value,
+                style: GoogleFonts.outfit(),
+                decoration: InputDecoration(
+                  hintText: 'Search wisdom...',
+                  hintStyle: GoogleFonts.outfit(color: AppTheme.textTertiary),
+                  prefixIcon: const Icon(Icons.search_rounded, color: AppTheme.primary, size: 22),
+                  filled: true,
+                  fillColor: Colors.white,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide(color: AppTheme.primary.withOpacity(0.1)),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide(color: AppTheme.primary.withOpacity(0.1)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: const BorderSide(color: AppTheme.primary, width: 1.5),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  double get maxExtent => 82;
+  @override
+  double get minExtent => 82;
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) => false;
 }

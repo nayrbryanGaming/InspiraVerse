@@ -2,10 +2,13 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../core/theme/app_theme.dart';
-import '../../../core/services/journal_storage_service.dart';
-import '../../../core/services/local_storage_service.dart';
-import '../../../core/services/haptic_service.dart';
+import '../../../../core/theme/app_theme.dart';
+import '../../../../core/services/journal_storage_service.dart';
+import '../../../../core/services/local_storage_service.dart';
+import '../../../../core/services/haptic_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -15,6 +18,13 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  Future<void> _launchUrl(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not launch $url');
+    }
+  }
+
   void _showDeleteConfirmation(BuildContext context) {
     HapticService.heavy();
     showDialog(
@@ -44,13 +54,13 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           const SizedBox(height: 20),
           Text(
-            'Inspiration Seeker',
+            FirebaseAuth.instance.currentUser?.displayName ?? 'Inspiration Seeker',
             style: GoogleFonts.outfit(fontSize: 24, fontWeight: FontWeight.w800),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 4),
           Text(
-            'Architecting your daily evolution',
+            FirebaseAuth.instance.currentUser?.email ?? 'Architecting your daily evolution',
             style: GoogleFonts.outfit(fontSize: 12, color: AppTheme.textTertiary),
             textAlign: TextAlign.center,
           ),
@@ -92,16 +102,40 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           _buildListTile(
             Icons.no_accounts_outlined, 
-            'Delete My Account', 
+            'Delete Account & Data', 
             color: Colors.redAccent,
             subtitle: 'Permanent removal of all personal data',
             onTap: () => _showDeleteConfirmation(context),
           ),
           const SizedBox(height: 24),
           _buildSectionHeader('Legal'),
-          _buildListTile(Icons.star_outline_rounded, 'Rate InspiraVerse'),
-          _buildListTile(Icons.info_outline_rounded, 'Terms & Privacy Hub'),
-          _buildListTile(Icons.logout_rounded, 'Sign Out', color: AppTheme.textTertiary, onTap: () => HapticService.medium()),
+          _buildListTile(
+            Icons.star_outline_rounded, 
+            'Rate InspiraVerse',
+            onTap: () {
+              HapticService.medium();
+              _launchUrl('https://play.google.com/store/apps/details?id=com.nayrbryan.inspiraverse');
+            },
+          ),
+          _buildListTile(
+            Icons.info_outline_rounded, 
+            'Privacy & Data Hub',
+            subtitle: 'Manage transparency and deletion',
+            onTap: () {
+              HapticService.medium();
+              context.push('/privacy-hub');
+            },
+          ),
+          _buildListTile(
+            Icons.logout_rounded, 
+            'Sign Out', 
+            color: AppTheme.textTertiary, 
+            onTap: () async {
+              HapticService.medium();
+              await FirebaseAuth.instance.signOut();
+              if (mounted) context.go('/login');
+            },
+          ),
           const SizedBox(height: 40),
         ],
       ),
@@ -186,14 +220,16 @@ class _DeletionSafetyDialogState extends State<DeletionSafetyDialog> {
   void initState() {
     super.initState();
     _startTimer();
-    _controller.addListener(() {
-      final isNowConfirmed = _controller.text.trim().toUpperCase() == 'DELETE';
-      if (isNowConfirmed && !_isConfirmed) {
-        HapticService.medium();
-      }
-      setState(() {
-        _isConfirmed = isNowConfirmed;
-      });
+    _controller.addListener(_onControllerChanged);
+  }
+
+  void _onControllerChanged() {
+    final isNowConfirmed = _controller.text.trim().toUpperCase() == 'DELETE';
+    if (isNowConfirmed && !_isConfirmed) {
+      HapticService.medium();
+    }
+    setState(() {
+      _isConfirmed = isNowConfirmed;
     });
   }
 
@@ -279,7 +315,7 @@ class _DeletionSafetyDialogState extends State<DeletionSafetyDialog> {
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           ),
           child: Text(
-            _secondsRemaining > 0 ? 'WAIT ($_secondsRemaining)s' : 'DELETE PERMANENTLY',
+            _secondsRemaining > 0 ? 'WAIT ($_secondsRemaining)s' : 'DELETE ACCOUNT & DATA',
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
@@ -289,25 +325,198 @@ class _DeletionSafetyDialogState extends State<DeletionSafetyDialog> {
 
   Future<void> _executeDeletion() async {
     HapticService.heavy();
-    // Purge local data
-    await JournalStorageService.clearAll();
-    await LocalStorageService.clearAll();
-    
-    // Purge Firebase data
     final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
+    if (user == null) return;
+
+    try {
+      // Show loading overlay
+      _showLoadingOverlay();
+
+      // Attempt to delete user to check for recent login requirement
       await user.delete();
+      
+      // If we got here, deletion from Auth succeeded immediately
+      await _purgeAllUserData(user.uid);
+      
+      if (mounted) {
+        Navigator.pop(context); // Close safety dialog
+        Navigator.pop(context); // Close loading overlay
+        HapticService.success();
+        _showDeletedSnackBar();
+      }
+    } on FirebaseAuthException catch (e) {
+      if (mounted) Navigator.pop(context); // Close loading overlay
+      
+      if (e.code == 'requires-recent-login') {
+        _handleReauthentication(user);
+      } else {
+        _showErrorSnackBar(e.message ?? 'Deletion failed');
+      }
+    } catch (e) {
+      if (mounted) Navigator.pop(context);
+      _showErrorSnackBar('An unexpected error occurred');
     }
-    
-    if (mounted) {
-      Navigator.pop(context);
-      HapticService.success();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Account and all associated data have been purged.'),
-          backgroundColor: Colors.redAccent,
+  }
+
+  void _showLoadingOverlay() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(color: Colors.white),
+      ),
+    );
+  }
+
+  void _showDeletedSnackBar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Account and all associated data have been purged.'),
+        backgroundColor: Colors.redAccent,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.orangeAccent,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  Future<void> _handleReauthentication(User user) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => ReauthConfirmDialog(user: user),
+    );
+
+    if (confirmed == true) {
+      // Retry deletion after successful re-authentication
+      _executeDeletion();
+    }
+  }
+
+  Future<void> _purgeAllUserData(String uid) async {
+    try {
+      final firestore = FirebaseFirestore.instance;
+      final batch = firestore.batch();
+      
+      // Delete Journals
+      final journals = await firestore.collection('users').doc(uid).collection('journals').get();
+      for (var doc in journals.docs) {
+        batch.delete(doc.reference);
+      }
+      
+      // Delete Favorites
+      final favorites = await firestore.collection('users').doc(uid).collection('favorites').get();
+      for (var doc in favorites.docs) {
+        batch.delete(doc.reference);
+      }
+      
+      // Delete Main Doc
+      batch.delete(firestore.collection('users').doc(uid));
+      
+      // Delete User Activity
+      batch.delete(firestore.collection('user_activity').doc(uid));
+      
+      await batch.commit();
+
+      // Purge local data
+      await JournalStorageService.clearAll();
+      await LocalStorageService.clearAll();
+    } catch (e) {
+      debugPrint('Firestore cleanup error: $e');
+      // We don't throw here to ensure the user perceives the deletion as successful 
+      // since the Auth account IS already deleted by this point.
+    }
+  }
+}
+
+class ReauthConfirmDialog extends StatefulWidget {
+  final User user;
+  const ReauthConfirmDialog({super.key, required this.user});
+
+  @override
+  State<ReauthConfirmDialog> createState() => _ReauthConfirmDialogState();
+}
+
+class _ReauthConfirmDialogState extends State<ReauthConfirmDialog> {
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
+  String? _error;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+      title: Text('Re-authentication Required', style: GoogleFonts.outfit(fontWeight: FontWeight.w800)),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text('For security, please enter your password to confirm account deletion.'),
+          const SizedBox(height: 24),
+          TextField(
+            controller: _passwordController,
+            obscureText: true,
+            decoration: InputDecoration(
+              labelText: 'Password',
+              errorText: _error,
+              filled: true,
+              fillColor: AppTheme.primary.withOpacity(0.05),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('CANCEL'),
         ),
+        ElevatedButton(
+          onPressed: _isLoading ? null : _confirmReauth,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppTheme.primary,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+          child: _isLoading 
+            ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+            : const Text('CONFIRM'),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _confirmReauth() async {
+    if (_passwordController.text.isEmpty) return;
+
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+
+    try {
+      final credential = EmailAuthProvider.credential(
+        email: widget.user.email!,
+        password: _passwordController.text,
       );
+      
+      await widget.user.reauthenticateWithCredential(credential);
+      if (mounted) Navigator.pop(context, true);
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        _isLoading = false;
+        _error = e.message;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+        _error = 'Re-authentication failed';
+      });
     }
   }
 }

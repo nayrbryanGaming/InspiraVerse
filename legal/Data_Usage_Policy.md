@@ -1,44 +1,35 @@
-# Data Usage Policy — InspiraVerse
+# Data Usage Policy for InspiraVerse
 
-**Effective Date:** April 12, 2026
+**Last Updated: April 21, 2026**
 
-To comply with the Google Play Store Data Safety section and ensure complete transparency, InspiraVerse Labs outlines exactly how your data is collected, processed, stored, and shared.
+This Data Usage Policy explains how InspiraVerse ("we," "our," or "us") handles data within the InspiraVerse mobile application.
 
-## 1. Zero Data Sale Policy
-**We do not and will never sell your personal data to any third party.** Your reflections, habits, and preferences are private and are used strictly to enhance your experience within the App.
+## 1. Types of Data We Collect
 
-## 2. What Data We Collect & Why
+### 1.1 Personal Information
+- **Email Address**: Used for account authentication and communication.
+- **Account Preferences**: Used to personalize your experience.
 
-### Personal Info
-- **Email Address & Display Name (Optional):** Collected only if you choose to create a cloud backup account via Firebase Authentication. Used for cross-device syncing.
+### 1.2 Usage Data
+- **Analytics**: We use Firebase Analytics to collect data on app performance and user engagement. This data is anonymized and aggregated.
+- **Diagnostics**: We collect crash reports and performance data to improve app stability.
 
-### App Activity
-- **Quote Interactions:** We track which quotes you "Favorite" and "Share".
-  - *Purpose:* This directly influences the `popularity_score` algorithm, allowing us to surface the most impactful quotes to the community.
-- **App Interactions:** Page views and feature usage (e.g., Designer Studio, Mindset Journey).
-  - *Purpose:* Analyzed in aggregate via Firebase Analytics to improve app UI/UX.
+## 2. How We Use Your Data
+- **Personalization**: To provide you with a personalized feed of quotes.
+- **Communication**: To send you daily notifications and important app updates.
+- **Improvement**: To analyze app usage and identify areas for improvement.
 
-### User-Generated Content
-- **Journal Entries:** Your daily reflections on specific quotes.
-  - *Purpose:* Stored locally on your device (`Hive`) for offline mode. If you authenticate, they are securely synced to your private Firestore document so you do not lose them when changing devices.
+## 3. Data Sharing and Disclosure
+- **No Sale of Data**: We do not sell your personal data to third parties.
+- **Service Providers**: We share data with service providers (like Firebase) only as necessary to provide the app's functionality.
+- **Legal Requirements**: We may disclose data if required by law.
 
-### Device & Diagnostics
-- **Crash Logs & Performance Data:** 
-  - *Purpose:* Collected anonymously to fix bugs and improve app stability.
+## 4. Your Choices
+- **Notifications**: You can opt-out of daily notifications in the app settings.
+- **Data Deletion**: You can request the deletion of your account and associated data through the app or by contacting us.
 
-## 3. Data Encryption & Security
-All data transmitted between your device and our servers (Firebase) is encrypted in transit using industry-standard HTTPS/TLS. Data stored in Firestore is encrypted at rest by Google.
+## 5. Security
+We implement industry-standard security measures to protect your data from unauthorized access.
 
-## 4. User Control & Deletion Rights
-You maintain absolute control over your data:
-- **Local Cache:** You can purge offline data via **Profile → Clear Local Cache**.
-- **Account & Cloud Data:** You can trigger a permanent, irrecoverable deletion of all your cloud data via **Profile → Delete My Account**. Our automated backend systems (Functions) will instantly wipe your data from our active databases.
-
-## 5. Third-Party Processing
-We rely on infrastructure provided by Google (Firebase) to run securely:
-- **Firebase Authentication** (Identity)
-- **Cloud Firestore** (Database)
-- **Firebase Analytics** (Usage data metrics)
-- **Firebase Cloud Messaging** (Daily Push Notifications)
-
-By using InspiraVerse, you consent to the processing of your data explicitly as described in this policy.
+## 6. Contact Us
+For any questions regarding our data usage practices, please contact us at support@inspiraverse.app.

@@ -1,10 +1,11 @@
+import 'dart:ui';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../services/image_export_service.dart';
+import '../../services/image_export_service.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/services/haptic_service.dart';
 
@@ -27,11 +28,12 @@ class _QuoteDesignerScreenState extends ConsumerState<QuoteDesignerScreen> {
   bool _isGradient = true;
   int _selectedTexture = 0; // 0: None, 1: Grain, 2: Minimalist Dots, 3: Soft Paper
 
+  // Textured patterns now rendered via TexturePainter for 100% offline reliability
   final List<String> _textures = [
-    '',
-    'https://www.transparenttextures.com/patterns/pinstriped-suit.png',
-    'https://www.transparenttextures.com/patterns/micro-fabrics.png',
-    'https://www.transparenttextures.com/patterns/asfalt-dark.png',
+    'None',
+    'Fine Grain',
+    'Mindful Dots',
+    'Linear Focus',
   ];
 
   final List<Color> _presetColors = [
@@ -94,17 +96,18 @@ class _QuoteDesignerScreenState extends ConsumerState<QuoteDesignerScreen> {
             ],
           ),
         ),
-        child: Column(
-          children: [
-            Expanded(
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 100, 24, 24),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 100, 24, 24),
+                child: Center(
                   child: Screenshot(
                     controller: _screenshotController,
                     child: Container(
                       width: double.infinity,
-                      constraints: const BoxConstraints(maxWidth: 500, maxHeight: 500),
+                      constraints: const BoxConstraints(maxWidth: 500, minHeight: 400),
                       decoration: BoxDecoration(
                         color: _backgroundColor,
                         borderRadius: BorderRadius.circular(32),
@@ -118,13 +121,6 @@ class _QuoteDesignerScreenState extends ConsumerState<QuoteDesignerScreen> {
                               ],
                             )
                           : null,
-                        image: _selectedTexture > 0 
-                          ? DecorationImage(
-                              image: NetworkImage(_textures[_selectedTexture]),
-                              repeat: ImageRepeat.repeat,
-                              opacity: 0.1,
-                            )
-                          : null,
                         boxShadow: [
                           BoxShadow(
                             color: _backgroundColor.withOpacity(0.3),
@@ -133,68 +129,84 @@ class _QuoteDesignerScreenState extends ConsumerState<QuoteDesignerScreen> {
                           ),
                         ],
                       ),
-                      padding: const EdgeInsets.all(48),
                       child: Stack(
-                        alignment: Alignment.center,
                         children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                _textController.text,
-                                textAlign: _textAlign,
-                                style: GoogleFonts.getFont(
-                                  _selectedFont,
-                                  color: _textColor,
-                                  fontSize: _fontSize,
-                                  fontWeight: FontWeight.w700,
-                                  height: 1.2,
+                          if (_selectedTexture > 0)
+                            Positioned.fill(
+                              child: CustomPaint(
+                                painter: TexturePainter(
+                                  type: _selectedTexture,
+                                  color: _textColor.withOpacity(0.05),
                                 ),
-                              ),
-                              const SizedBox(height: 24),
-                              Row(
-                                mainAxisAlignment: _getAlignmentMainAxisAlignment(),
-                                children: [
-                                  Container(width: 20, height: 1, color: _textColor.withOpacity(0.5)),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    _authorController.text,
-                                    style: GoogleFonts.outfit(
-                                      color: _textColor.withOpacity(0.8),
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
+                               ),
+                            ),
+                          Padding(
+                            padding: const EdgeInsets.all(48),
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      _textController.text,
+                                      textAlign: _textAlign,
+                                      style: GoogleFonts.getFont(
+                                        _selectedFont,
+                                        color: _textColor,
+                                        fontSize: _fontSize,
+                                        fontWeight: FontWeight.w700,
+                                        height: 1.2,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 24),
+                                    Row(
+                                      mainAxisAlignment: _getAlignmentMainAxisAlignment(),
+                                      children: [
+                                        Container(width: 20, height: 1, color: _textColor.withOpacity(0.5)),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          _authorController.text,
+                                          style: GoogleFonts.outfit(
+                                            color: _textColor.withOpacity(0.8),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                // Auto-Brand Watermark
+                                Positioned(
+                                  bottom: 0,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                    decoration: BoxDecoration(
+                                      color: _textColor.withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(color: _textColor.withOpacity(0.1)),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(Icons.auto_awesome_rounded, color: _textColor.withOpacity(0.5), size: 10),
+                                        const SizedBox(width: 6),
+                                        Text(
+                                          'INSPIRAVERSE',
+                                          style: GoogleFonts.outfit(
+                                            color: _textColor.withOpacity(0.5),
+                                            fontSize: 8,
+                                            fontWeight: FontWeight.w900,
+                                            letterSpacing: 1.5,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          // Auto-Brand Watermark
-                          Positioned(
-                            bottom: 0,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                              decoration: BoxDecoration(
-                                color: _textColor.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(color: _textColor.withOpacity(0.1)),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(Icons.auto_awesome_rounded, color: _textColor.withOpacity(0.5), size: 10),
-                                  const SizedBox(width: 6),
-                                  Text(
-                                    'INSPIRAVERSE',
-                                    style: GoogleFonts.outfit(
-                                      color: _textColor.withOpacity(0.5),
-                                      fontSize: 8,
-                                      fontWeight: FontWeight.w900,
-                                      letterSpacing: 1.5,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -203,9 +215,9 @@ class _QuoteDesignerScreenState extends ConsumerState<QuoteDesignerScreen> {
                   ),
                 ),
               ),
-            ),
-            _buildPremiumControls(),
-          ],
+              _buildPremiumControls(),
+            ],
+          ),
         ),
       ),
     );
@@ -221,54 +233,75 @@ class _QuoteDesignerScreenState extends ConsumerState<QuoteDesignerScreen> {
 
   Widget _buildPremiumControls() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 40),
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(32),
+        borderRadius: BorderRadius.circular(28),
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
+          filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
           child: Container(
             decoration: BoxDecoration(
-              color: AppTheme.darkSurface.withOpacity(0.85),
-              borderRadius: BorderRadius.circular(32),
-              border: Border.all(color: Colors.white.withOpacity(0.1)),
+              color: AppTheme.darkSurface.withOpacity(0.7),
+              borderRadius: BorderRadius.circular(28),
+              border: Border.all(color: Colors.white.withOpacity(0.08)),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  blurRadius: 30,
+                  color: Colors.black.withOpacity(0.3),
+                  blurRadius: 40,
                   offset: const Offset(0, 10),
                 ),
               ],
             ),
-            child: SafeArea(
-              top: false,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _buildTabItem(0, 'TEXT', Icons.text_fields_rounded),
-                        _buildTabItem(1, 'STYLE', Icons.palette_rounded),
-                        _buildTabItem(2, 'LAYOUT', Icons.layers_rounded),
-                      ],
-                    ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 8),
+                Container(
+                  width: 32,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(2),
                   ),
-                  const Divider(height: 24, indent: 24, endIndent: 24, color: Colors.white10),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
-                      child: _activeTab == 0 //
-                        ? _buildTextTab() //
-                        : _activeTab == 1 //
-                          ? _buildStyleTab() //
-                          : _buildLayoutTab(),
-                    ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _buildTabItem(0, 'TEXT', Icons.text_fields_rounded),
+                      _buildTabItem(1, 'STYLE', Icons.palette_rounded),
+                      _buildTabItem(2, 'LAYOUT', Icons.layers_rounded),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                  child: Divider(height: 1, color: Colors.white10),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 400),
+                    transitionBuilder: (Widget child, Animation<double> animation) {
+                      return FadeTransition(
+                        opacity: animation,
+                        child: SlideTransition(
+                          position: Tween<Offset>(
+                            begin: const Offset(0.0, 0.1),
+                            end: Offset.zero,
+                          ).animate(animation),
+                          child: child,
+                        ),
+                      );
+                    },
+                    child: _activeTab == 0
+                        ? _buildTextTab()
+                        : _activeTab == 1
+                            ? _buildStyleTab()
+                            : _buildLayoutTab(),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -529,4 +562,48 @@ class _QuoteDesignerScreenState extends ConsumerState<QuoteDesignerScreen> {
       );
     }
   }
+}
+
+class TexturePainter extends CustomPainter {
+  final int type;
+  final Color color;
+
+  TexturePainter({required this.type, required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 1.0;
+
+    switch (type) {
+      case 1: // Fine Grain
+        final rand = 42; // Deterministic seed
+        for (double i = 0; i < size.width; i += 4) {
+          for (double j = 0; j < size.height; j += 4) {
+            // Pseudo-random dots
+            if ((i * j + rand) % 7 < 2) {
+              canvas.drawCircle(Offset(i, j), 0.5, paint);
+            }
+          }
+        }
+        break;
+      case 2: // Mindful Dots
+        for (double i = 0; i < size.width; i += 20) {
+          for (double j = 0; j < size.height; j += 20) {
+            canvas.drawCircle(Offset(i, j), 1.0, paint);
+          }
+        }
+        break;
+      case 3: // Linear Focus
+        for (double i = 0; i < size.width; i += 10) {
+          canvas.drawLine(Offset(i, 0), Offset(i, size.height), paint);
+        }
+        break;
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant TexturePainter oldDelegate) => 
+      oldDelegate.type != type || oldDelegate.color != color;
 }

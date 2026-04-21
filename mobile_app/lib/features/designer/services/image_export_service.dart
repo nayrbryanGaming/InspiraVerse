@@ -28,14 +28,15 @@ class ImageExportService {
 
   Future<String?> saveToGallery(Uint8List bytes) async {
     try {
-      // In a real production app, we would use image_gallery_saver here.
-      // For now, we save to documents and log the path.
-      final directory = await getApplicationDocumentsDirectory();
+      final directory = await getTemporaryDirectory();
       final file = File('${directory.path}/InspiraVerse_${DateTime.now().millisecondsSinceEpoch}.png');
       await file.writeAsBytes(bytes);
+      
+      // On Android, we can trigger a media scan to make it appear in gallery
+      // For now, we return the path which can be used by Share.shareXFiles
       return file.path;
     } catch (e) {
-      _logger.e('Error saving to gallery: $e');
+      _logger.e('Error preparing for gallery: $e');
       return null;
     }
   }

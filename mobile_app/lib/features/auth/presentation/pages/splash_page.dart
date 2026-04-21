@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../../../core/constants/app_constants.dart';
-import '../../../core/services/local_storage_service.dart';
+import '../../../../core/constants/app_constants.dart';
+import '../../../../core/services/local_storage_service.dart';
+import '../../../../core/theme/app_theme.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -15,105 +17,109 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3), () {
-      if (mounted) {
-        if (!LocalStorageService.isOnboardingDone) {
-          context.go('/onboarding');
-        } else {
-          // Assume user is checking auth state here natively or via riverpod
-          // For now let's just go straight to home
-          context.go('/home');
-        }
-      }
-    });
+    // No manual navigation here. 
+    // The GoRouter's refreshListenable on authNotifier handles the transition 
+    // once the app initialization is complete.
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.darkBackground,
-      body: Stack(
-        children: [
-          // Dynamic immersive background
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: [
-                    AppTheme.primaryDark,
-                    AppTheme.darkBackground,
-                  ],
-                ),
-              ),
-            ),
+      body: Container(
+        decoration: BoxDecoration(
+          color: AppTheme.darkBackground,
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              AppTheme.primary.withOpacity(0.1),
+              AppTheme.darkBackground,
+            ],
           ),
-          Positioned.fill(
-            child: Opacity(
-              opacity: 0.1,
-              child: Image.network(
-                'https://www.transparenttextures.com/patterns/cubes.png',
-                repeat: ImageRepeat.repeat,
-              ),
-            ),
-          ),
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Animated Spark Logo
-                Container(
-                  padding: const EdgeInsets.all(32),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.05),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppTheme.primary.withOpacity(0.3),
-                        blurRadius: 50,
-                        spreadRadius: 10,
-                      )
-                    ],
-                  ),
-                  child: const Icon(
-                    Icons.auto_awesome_rounded,
-                    size: 80,
-                    color: Colors.white,
-                  ),
-                )
-                    .animate(onPlay: (c) => c.repeat(reverse: true))
-                    .scale(begin: const Offset(0.9, 0.9), end: const Offset(1.1, 1.1), duration: 2000.ms, curve: Curves.easeInOut)
-                    .shimmer(duration: 2000.ms),
-                const SizedBox(height: 32),
-                Text(
-                  AppConstants.appName.toUpperCase(),
-                  style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                        color: Colors.white,
-                        letterSpacing: 4,
-                        fontWeight: FontWeight.w900,
-                      ),
-                ).animate().fadeIn(delay: 400.ms, duration: 800.ms).slideY(begin: 0.2),
-                const SizedBox(height: 12),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    'ELEVATE YOUR MINDSET',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppTheme.secondary,
-                          letterSpacing: 2,
-                          fontWeight: FontWeight.bold,
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  // Outer Zen Ring
+                  Container(
+                    width: 180,
+                    height: 180,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: AppTheme.primary.withOpacity(0.1), width: 2),
+                    ),
+                  ).animate(onPlay: (c) => c.repeat())
+                   .rotate(duration: 10.seconds),
+                  
+                  // Inner Pulsing Glow
+                  Container(
+                    width: 150,
+                    height: 150,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppTheme.primary.withOpacity(0.2),
+                          blurRadius: 40,
+                          spreadRadius: 10,
                         ),
+                      ],
+                    ),
+                  ).animate(onPlay: (c) => c.repeat(reverse: true))
+                   .scale(begin: const Offset(0.8, 0.8), end: const Offset(1.2, 1.2), duration: 2.seconds, curve: Curves.easeInOut),
+
+                  // The Logo
+                  Container(
+                    width: 120,
+                    height: 120,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                    ),
+                    child: ClipOval(
+                      child: Image.asset(
+                        'assets/images/logo.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ).animate().scale(delay: 400.ms, duration: 800.ms, curve: Curves.easeOutBack),
+                ],
+              ),
+              const SizedBox(height: 48),
+              Text(
+                'InspiraVerse',
+                style: GoogleFonts.outfit(
+                  color: Colors.white,
+                  fontSize: 32,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 2.0,
+                ),
+              ).animate().fadeIn(delay: 800.ms, duration: 800.ms).slideY(begin: 0.2),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.05),
+                  borderRadius: BorderRadius.circular(30),
+                  border: Border.all(color: Colors.white.withOpacity(0.1)),
+                ),
+                child: Text(
+                  'ELEVATE YOUR MINDSET',
+                  style: GoogleFonts.outfit(
+                    color: AppTheme.secondary,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 3,
                   ),
-                ).animate().fadeIn(delay: 800.ms, duration: 800.ms).scale(),
-              ],
-            ),
+                ),
+              ).animate().fadeIn(delay: 1200.ms, duration: 1.seconds).scale(),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

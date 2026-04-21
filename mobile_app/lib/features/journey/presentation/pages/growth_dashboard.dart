@@ -6,6 +6,7 @@ import '../../../../core/services/journal_storage_service.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../models/journal_model.dart';
 import '../../../../core/services/haptic_service.dart';
+import '../widgets/zen_breathing_portal.dart';
 
 class GrowthDashboard extends ConsumerStatefulWidget {
   const GrowthDashboard({super.key});
@@ -68,6 +69,8 @@ class _GrowthDashboardState extends ConsumerState<GrowthDashboard> {
               _buildHeader('Consciousness Level'),
               const SizedBox(height: 16),
               _buildEvolutionProgress(journals.length),
+              const SizedBox(height: 32),
+              const ZenBreathingPortal().animate().fadeIn(delay: 400.ms).slideY(begin: 0.1),
               const SizedBox(height: 32),
               _buildHeader('Growth Metrics'),
               const SizedBox(height: 16),
