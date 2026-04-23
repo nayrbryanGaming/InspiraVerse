@@ -12,7 +12,7 @@ export default function TermsOfService() {
         
         <div className="w-full">
           <h1 className="text-4xl md:text-6xl font-black mb-6 tracking-tighter text-center">Terms of Service</h1>
-          <p className="text-gray-400 text-sm mb-16 font-bold uppercase tracking-widest text-center">Revision Date: April 16, 2026</p>
+          <p className="text-gray-400 text-sm mb-16 font-bold uppercase tracking-widest text-center">Revision Date: April 23, 2026</p>
 
           <div className="space-y-12 text-gray-600 leading-relaxed font-medium">
             <section>

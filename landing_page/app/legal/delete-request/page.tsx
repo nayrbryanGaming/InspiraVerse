@@ -12,7 +12,8 @@ export default function DeleteRequest() {
         
         <div className="w-full">
           <h1 className="text-4xl md:text-6xl font-black mb-6 tracking-tighter text-center">Right to be Forgotten</h1>
-          <p className="text-gray-400 text-sm mb-16 font-bold uppercase tracking-widest text-center">Google Play Compliance Portal</p>
+          <p className="text-gray-400 text-sm mb-4 font-bold uppercase tracking-widest text-center">Google Play Compliance Portal</p>
+          <p className="text-gray-400 text-[10px] mb-12 font-bold uppercase tracking-[0.2em] text-center">Revision Date: April 23, 2026</p>
 
           <div className="space-y-12 text-gray-600 leading-relaxed font-medium">
             <section className="bg-red-50/50 p-10 rounded-[2.5rem] border border-red-100">

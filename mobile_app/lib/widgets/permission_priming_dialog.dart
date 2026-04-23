@@ -4,7 +4,16 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../core/theme/app_theme.dart';
 
 class PermissionPrimingDialog extends StatelessWidget {
-  const PermissionPrimingDialog({super.key});
+  final String title;
+  final String description;
+  final IconData icon;
+
+  const PermissionPrimingDialog({
+    super.key,
+    required this.title,
+    required this.description,
+    required this.icon,
+  });
 
   static Future<bool?> show(
     BuildContext context, {
@@ -15,7 +24,11 @@ class PermissionPrimingDialog extends StatelessWidget {
     return showDialog<bool>(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const PermissionPrimingDialog(),
+      builder: (context) => PermissionPrimingDialog(
+        title: title,
+        description: description,
+        icon: icon,
+      ),
     );
   }
 
@@ -35,15 +48,15 @@ class PermissionPrimingDialog extends StatelessWidget {
                 color: AppTheme.primary.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
-                Icons.notifications_active_rounded,
+              child: Icon(
+                icon,
                 size: 40,
                 color: AppTheme.primary,
               ),
             ).animate(onPlay: (c) => c.repeat()).shimmer(duration: 2.seconds),
             const SizedBox(height: 24),
             Text(
-              'Daily Inspiration',
+              title,
               style: GoogleFonts.outfit(
                 fontSize: 24,
                 fontWeight: FontWeight.w800,
@@ -52,7 +65,7 @@ class PermissionPrimingDialog extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              'To help you stay on track, we\'d like to send you a daily spark of wisdom. You can customize this anytime in settings.',
+              description,
               textAlign: TextAlign.center,
               style: GoogleFonts.outfit(
                 fontSize: 14,

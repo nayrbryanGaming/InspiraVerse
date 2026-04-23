@@ -83,12 +83,12 @@ class PrivacyHubPage extends StatelessWidget {
                   _buildLegalAction(
                     Icons.policy_rounded,
                     'Review Privacy Policy',
-                    onTap: () => _launchUrl('https://inspiraverse.app/privacy'),
+                    onTap: () => _launchUrl('https://inspiraverse.app/legal/privacy'),
                   ),
                   _buildLegalAction(
                     Icons.description_rounded,
                     'Terms of Service',
-                    onTap: () => _launchUrl('https://inspiraverse.app/terms'),
+                    onTap: () => _launchUrl('https://inspiraverse.app/legal/terms'),
                   ),
                   const SizedBox(height: 40),
                   const Divider(height: 1),

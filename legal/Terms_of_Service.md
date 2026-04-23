@@ -1,33 +1,23 @@
 # Terms of Service for InspiraVerse
 
-**Last Updated: April 21, 2026**
+**Last Updated: April 23, 2026**
 
-Please read these Terms of Service ("Terms", "Terms of Service") carefully before using the InspiraVerse mobile application (the "Service") operated by InspiraVerse ("us", "we", or "our").
+Please read these terms and conditions carefully before using Our Service.
 
-## 1. Acceptance of Terms
-By accessing or using the Service, you agree to be bound by these Terms. If you disagree with any part of the terms, then you may not access the Service.
+## 1. Acknowledgment
+These are the Terms and Conditions governing the use of this Service and the agreement that operates between You and InspiraVerse. These Terms and Conditions set out the rights and obligations of all users regarding the use of the Service.
 
-## 2. Accounts
-When you create an account with us, you must provide us information that is accurate, complete, and current at all times. Failure to do so constitutes a breach of the Terms, which may result in immediate termination of your account on our Service.
+## 2. User Accounts
+When You create an account with Us, You must provide Us information that is accurate, complete, and current at all times. Failure to do so constitutes a breach of the Terms, which may result in immediate termination of Your account on Our Service.
 
 ## 3. Intellectual Property
-The Service and its original content, features and functionality are and will remain the exclusive property of InspiraVerse and its licensors. The Service is protected by copyright, trademark, and other laws of both the United States and foreign countries.
+The Service and its original content, features, and functionality are and will remain the exclusive property of InspiraVerse and its licensors.
 
-## 4. Links to Other Web Sites
-Our Service may contain links to third-party web sites or services that are not owned or controlled by InspiraVerse. InspiraVerse has no control over, and assumes no responsibility for, the content, privacy policies, or practices of any third party web sites or services.
+## 4. Termination
+We may terminate or suspend Your Account immediately, without prior notice or liability, for any reason whatsoever, including without limitation if You breach these Terms and Conditions.
 
-## 5. Termination
-We may terminate or suspend access to our Service immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms.
+## 5. Limitation of Liability
+To the maximum extent permitted by applicable law, in no event shall InspiraVerse be liable for any special, incidental, indirect, or consequential damages whatsoever.
 
-## 6. Limitation of Liability
-In no event shall InspiraVerse, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from (i) your access to or use of or inability to access or use the Service; (ii) any conduct or content of any third party on the Service; (iii) any content obtained from the Service; and (iv) unauthorized access, use or alteration of your transmissions or content, whether based on warranty, contract, tort (including negligence) or any other legal theory, whether or not we have been informed of the possibility of such damage.
-
-## 7. Governing Law
-These Terms shall be governed and construed in accordance with the laws of the United States, without regard to its conflict of law provisions.
-
-## 8. Changes
-We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material, we will try to provide at least 30 days notice prior to any new terms taking effect.
-
-## 9. Contact Us
-If you have any questions about these Terms, please contact us:
-- By email: support@inspiraverse.app
+## 6. Governing Law
+The laws of the Country, excluding its conflicts of law rules, shall govern this Terms and Your use of the Service.

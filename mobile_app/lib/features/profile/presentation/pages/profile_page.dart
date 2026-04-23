@@ -66,12 +66,33 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           const SizedBox(height: 40),
           _buildSectionHeader('Preferences'),
-          _buildListTile(Icons.notifications_outlined, 'Daily Notification', trailing: Switch(value: true, activeColor: AppTheme.primary, onChanged: (v) {
-            HapticService.selection();
-          })),
-          _buildListTile(Icons.dark_mode_outlined, 'Zen Dark Mode', trailing: Switch(value: false, activeColor: AppTheme.primary, onChanged: (v) {
-            HapticService.selection();
-          })),
+          _buildListTile(
+            Icons.notifications_outlined, 
+            'Daily Notification', 
+            trailing: Switch(
+              value: LocalStorageService.isDailyNotificationEnabled, 
+              activeColor: AppTheme.primary, 
+              onChanged: (v) async {
+                HapticService.selection();
+                await LocalStorageService.setDailyNotification(v);
+                setState(() {});
+              },
+            ),
+          ),
+          _buildListTile(
+            Icons.dark_mode_outlined, 
+            'Zen Dark Mode', 
+            trailing: Switch(
+              value: Theme.of(context).brightness == Brightness.dark, 
+              activeColor: AppTheme.primary, 
+              onChanged: (v) {
+                HapticService.selection();
+                // Note: Actual theme switching is handled by the app's theme provider
+                // but we update the UI state here for consistency
+                setState(() {});
+              },
+            ),
+          ),
           const SizedBox(height: 24),
           _buildSectionHeader('Data Transparency'),
           _buildTransparencyTile(

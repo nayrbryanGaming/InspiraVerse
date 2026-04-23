@@ -24,28 +24,28 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSy_MOCK_API_KEY_FOR_COMPILATION',
-    appId: '1:1234567890:web:mock',
-    messagingSenderId: '1234567890',
-    projectId: 'inspiraverse-mock',
-    authDomain: 'inspiraverse-mock.firebaseapp.com',
-    storageBucket: 'inspiraverse-mock.appspot.com',
+    apiKey: 'REPLACE_WITH_PRODUCTION_WEB_API_KEY',
+    appId: '1:XXXXXXXXXXXX:web:XXXXXXXXXXXXXXXXXXXXXX',
+    messagingSenderId: 'XXXXXXXXXXXX',
+    projectId: 'inspiraverse-production',
+    authDomain: 'inspiraverse-production.firebaseapp.com',
+    storageBucket: 'inspiraverse-production.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSy_MOCK_API_KEY_FOR_COMPILATION',
-    appId: '1:1234567890:android:mock',
-    messagingSenderId: '1234567890',
-    projectId: 'inspiraverse-mock',
-    storageBucket: 'inspiraverse-mock.appspot.com',
+    apiKey: 'REPLACE_WITH_PRODUCTION_ANDROID_API_KEY',
+    appId: '1:XXXXXXXXXXXX:android:XXXXXXXXXXXXXXXXXXXXXX',
+    messagingSenderId: 'XXXXXXXXXXXX',
+    projectId: 'inspiraverse-production',
+    storageBucket: 'inspiraverse-production.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSy_MOCK_API_KEY_FOR_COMPILATION',
-    appId: '1:1234567890:ios:mock',
-    messagingSenderId: '1234567890',
-    projectId: 'inspiraverse-mock',
-    storageBucket: 'inspiraverse-mock.appspot.com',
+    apiKey: 'REPLACE_WITH_PRODUCTION_IOS_API_KEY',
+    appId: '1:XXXXXXXXXXXX:ios:XXXXXXXXXXXXXXXXXXXXXX',
+    messagingSenderId: 'XXXXXXXXXXXX',
+    projectId: 'inspiraverse-production',
+    storageBucket: 'inspiraverse-production.appspot.com',
     iosBundleId: 'com.nayrbryan.inspiraverse',
   );
 }

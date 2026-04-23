@@ -1,20 +1,14 @@
-# Medical Disclaimer for InspiraVerse
+# Disclaimer for InspiraVerse
 
-**Last Updated: April 21, 2026**
+**Last Updated: April 23, 2026**
 
-The information provided by InspiraVerse ("we," "our," or "us") in the InspiraVerse mobile application is for general informational purposes only.
+## 1. Professional Advice Disclaimer
+The information provided by InspiraVerse is for general inspirational and informational purposes only. All information on the Application is provided in good faith, however we make no representation or warranty of any kind, express or implied, regarding the accuracy, adequacy, validity, reliability, availability, or completeness of any information on the Application.
 
-## 1. Not Medical Advice
-The content provided in InspiraVerse, including quotes, reflections, and mindfulness exercises, is not intended to be a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.
+UNDER NO CIRCUMSTANCE SHALL WE HAVE ANY LIABILITY TO YOU FOR ANY LOSS OR DAMAGE OF ANY KIND INCURRED AS A RESULT OF THE USE OF THE APPLICATION OR RELIANCE ON ANY INFORMATION PROVIDED ON THE APPLICATION. YOUR USE OF THE APPLICATION AND YOUR RELIANCE ON ANY INFORMATION ON THE APPLICATION IS SOLELY AT YOUR OWN RISK.
 
-## 2. No Professional-Patient Relationship
-Use of the InspiraVerse application does not create a professional-patient relationship between you and InspiraVerse.
+## 2. External Links Disclaimer
+The Application may contain links to external websites that are not provided or maintained by or in any way affiliated with InspiraVerse. Please note that we do not guarantee the accuracy, relevance, timeliness, or completeness of any information on these external websites.
 
-## 3. Limitation of Liability
-InspiraVerse is not responsible or liable for any advice, course of treatment, diagnosis, or any other information, services, or products that you obtain through this application.
-
-## 4. Emergency Situations
-If you are in a crisis or an emergency situation, please contact your local emergency services or a crisis mental health professional immediately. Do not rely on the InspiraVerse application for emergency assistance.
-
-## 5. Personal Responsibility
-You acknowledge and agree that you are using the InspiraVerse application at your own risk and that you are solely responsible for any decisions or actions you take based on the information provided in the app.
+## 3. Health & Wellness Disclaimer
+InspiraVerse is not a medical or mental health provider. The content provided is not intended to be a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.

@@ -512,7 +512,7 @@ class _QuoteDesignerScreenState extends ConsumerState<QuoteDesignerScreen> {
               final isSelected = _selectedTexture == index;
               return ActionChip(
                 label: Text(
-                  index == 0 ? 'Pure' : 'Texture $index',
+                  _textures[index],
                   style: TextStyle(fontSize: 10, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal),
                 ),
                 backgroundColor: isSelected ? AppTheme.primaryLight : Colors.white.withOpacity(0.05),

@@ -131,20 +131,20 @@ export default function LandingPage() {
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#6366F1] to-[#EC4899] flex items-center justify-center text-white font-black text-xs shadow-lg">I</div>
                 <span className="text-xl font-black tracking-tighter">InspiraVerse</span>
               </div>
-              <p className="text-sm text-gray-400 max-w-xs font-medium">Crafting the future of psychological resilience through elite curation.</p>
+              <p className="text-sm text-gray-400 max-w-xs font-medium">Crafting the future of psychological resilience through premium curated wisdom.</p>
             </div>
             
             <div className="flex flex-wrap gap-x-12 gap-y-6 text-sm font-bold text-gray-400 uppercase tracking-widest">
-              <Link href="/legal/privacy" className="hover:text-[#A855F7] transition-colors">Privacy</Link>
-              <Link href="/legal/terms" className="hover:text-[#A855F7] transition-colors">Terms</Link>
-              <Link href="/legal/delete-request" className="text-[#EC4899] hover:text-[#D946EF] transition-colors">Purge Account</Link>
+              <Link href="/legal/privacy" className="hover:text-[#A855F7] transition-colors">Privacy Policy</Link>
+              <Link href="/legal/terms" className="hover:text-[#A855F7] transition-colors">Terms of Service</Link>
+              <Link href="/legal/delete-request" className="text-[#EC4899] hover:text-[#D946EF] transition-colors">Data Deletion Request</Link>
             </div>
           </div>
           <div className="mt-20 pt-10 border-t border-gray-100 flex flex-col md:flex-row justify-between gap-6">
-            <p className="text-xs text-gray-400 font-medium">© 2026 InspiraVerse Labs. Global Headquarters: Silicon Valley / Remote.</p>
+            <p className="text-xs text-gray-400 font-medium">© 2026 InspiraVerse Labs. Engineered for the modern mind.</p>
             <div className="flex gap-4">
               <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-              <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Service Status: Operational</span>
+              <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Systems Operational</span>
             </div>
           </div>
         </div>
